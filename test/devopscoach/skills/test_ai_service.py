@@ -7,10 +7,12 @@ class TestAIService:
     """Tests for AIService class."""
 
     def test_ai_service_initialization(self):
-        """AI service should initialize with OpenAI client."""
+        """AI service should initialize with or without API key."""
         service = AIService()
-        assert service.client is not None
+        # Client may be None if no API key is set (test environment)
         assert service.model is not None
+        # Service should still be functional with fallback
+        assert hasattr(service, "analyze_skills")
 
     def test_analyze_skills_returns_structure(self):
         """analyze_skills should return a properly structured response."""
@@ -47,6 +49,8 @@ class TestAIService:
 
     def test_fallback_analysis_on_error(self, monkeypatch):
         """Service should return fallback analysis if AI fails."""
+        # Set a mock API key so client is initialized
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key")
         service = AIService()
 
         # Mock the client to raise an exception
@@ -56,9 +60,10 @@ class TestAIService:
         def mock_create(*args, **kwargs):
             raise MockError("API unavailable")
 
-        monkeypatch.setattr(
-            service.client.chat.completions, "create", mock_create
-        )
+        if service.client:
+            monkeypatch.setattr(
+                service.client.chat.completions, "create", mock_create
+            )
 
         skills_data = {
             "current_role": "Developer",
@@ -83,15 +88,16 @@ class TestAIService:
         assert "fallback_note" in result
         assert "API unavailable" in result["fallback_note"]
 
-    def test_score_calculation_in_fallback(self):
+    def test_score_calculation_in_fallback(self, monkeypatch):
         """Fallback analysis should calculate score based on skills."""
+        # Ensure no API key so we use fallback directly
+        # Need to patch settings since env var is already loaded
+        import config.settings
+        monkeypatch.setattr(config.settings, "OPENAI_API_KEY", None)
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
         service = AIService()
-
-        # Mock to always fail
-        def mock_create(*args, **kwargs):
-            raise Exception("Mock error")
-
-        service.client.chat.completions.create = mock_create
+        assert service.client is None, "Client should be None without API key"
 
         # User with many skills
         skills_data_high = {
