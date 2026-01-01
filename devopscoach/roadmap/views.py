@@ -25,15 +25,26 @@ def list_roadmaps():
 @roadmap.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
-    """Create a new learning roadmap."""
-    form = CreateRoadmapForm()
+    """Create a new learning roadmap.
 
-    if form.validate_on_submit():
-        # Check for existing assessment to use as base
+    Optional assessment_id query parameter can be passed to use a specific
+    assessment as the basis for the roadmap.
+    """
+    form = CreateRoadmapForm()
+    assessment_id = request.args.get("assessment_id", type=int)
+
+    # Get the specific assessment if assessment_id provided, otherwise get latest
+    if assessment_id:
+        assessment = SkillAssessment.query.filter_by(
+            id=assessment_id,
+            user_id=current_user.id,
+        ).first()
+    else:
         assessment = SkillAssessment.query.filter_by(
             user_id=current_user.id
         ).first()
 
+    if form.validate_on_submit():
         # Generate roadmap data
         roadmap_data = _generate_roadmap_data(
             target_role=form.target_role.data,
@@ -54,17 +65,27 @@ def create():
         flash("Your learning roadmap has been created!", "success")
         return redirect(url_for("roadmap.detail", roadmap_id=roadmap.id))
 
-    # Pre-fill with latest assessment data if available
-    assessment = SkillAssessment.query.filter_by(
-        user_id=current_user.id
-    ).first()
+    # Pre-fill with assessment data if available
     if assessment and request.method == "GET":
         if hasattr(assessment, "recommendations") and assessment.recommendations:
             rec = assessment.recommendations
+            # Pre-fill target role with first recommended role
             if "recommended_roles" in rec and rec["recommended_roles"]:
                 form.target_role.data = rec["recommended_roles"][0]
+            # Pre-fill focus areas from skill gaps
+            if "skill_gaps" in rec and rec["skill_gaps"]:
+                focus_areas = ", ".join([gap["skill"] for gap in rec["skill_gaps"][:5]])
+                form.focus_areas.data = focus_areas
+            # Set default title based on target role
+            if "recommended_roles" in rec and rec["recommended_roles"]:
+                form.title.data = f"My Path to {rec['recommended_roles'][0]}"
 
-    return render_template("roadmap/create.html", form=form, assessment=assessment)
+    return render_template(
+        "roadmap/create.html",
+        form=form,
+        assessment=assessment,
+        from_assessment=bool(assessment_id),
+    )
 
 
 @roadmap.route("/<int:roadmap_id>")

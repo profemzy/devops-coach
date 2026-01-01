@@ -144,7 +144,8 @@
       </a>
 
       <!-- Learning Resources Card -->
-      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover">
+      <a href="{{ url_for('resources.list_resources') }}"
+         class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover block">
         <div class="h-2 bg-gradient-to-r from-yellow-500 to-amber-600"></div>
         <div class="p-6">
           <div class="flex items-start justify-between">
@@ -155,22 +156,22 @@
                 </svg>
               </div>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-              Coming Soon
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              Available
             </span>
           </div>
           <h3 class="mt-4 text-lg font-bold text-gray-900">Learning Resources</h3>
           <p class="mt-2 text-sm text-gray-600">
             Access hand-picked tutorials, courses, and certifications. Save and organize resources for easy reference.
           </p>
-          <div class="mt-4 flex items-center text-yellow-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
-            <span>Learn more</span>
+          <div class="mt-4 flex items-center text-amber-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+            <span>View Resources</span>
             <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Portfolio Projects Card -->
       <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover">

@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Explore Resources{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <a href="{{ url_for('resources.list_resources') }}"
+         class="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium mb-4">
+        <svg class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to My Resources
+      </a>
+      <h1 class="text-3xl font-bold gradient-text">Explore DevOps Resources</h1>
+      <p class="mt-2 text-gray-600 max-w-2xl">
+        Curated collection of high-quality learning resources organized by topic. Click any resource to add it to your personal library.
+      </p>
+    </div>
+
+    <!-- Categories -->
+    {% for category, category_resources in recommendations.items() %}
+    <div class="mb-10">
+      <div class="flex items-center mb-4">
+        <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">{{ category }}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for rec in category_resources %}
+          <div class="glass rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 p-6">
+            <div class="flex items-start justify-between mb-3">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full
+                {% if rec.type == 'course' %}bg-blue-100 text-blue-800
+                {% elif rec.type == 'documentation' %}bg-purple-100 text-purple-800
+                {% elif rec.type == 'certification' %}bg-green-100 text-green-800
+                {% elif rec.type == 'tutorial' %}bg-indigo-100 text-indigo-800
+                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                {{ rec.type|title }}
+              </span>
+              {% if rec.difficulty %}
+                <span class="px-2 py-1 text-xs font-medium rounded-full
+                  {% if rec.difficulty == 'beginner' %}bg-green-100 text-green-700
+                  {% elif rec.difficulty == 'intermediate' %}bg-yellow-100 text-yellow-700
+                  {% else %}bg-red-100 text-red-700{% endif %}">
+                  {{ rec.difficulty|title }}
+                </span>
+              {% endif %}
+            </div>
+
+            <h3 class="font-bold text-gray-900 mb-2">{{ rec.title }}</h3>
+            <p class="text-sm text-gray-600 mb-4">{{ rec.description }}</p>
+
+            <div class="flex space-x-2">
+              {% if rec.url %}
+                <a href="{{ rec.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="flex-1 text-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all">
+                  Open Resource
+                </a>
+              {% endif %}
+              <button onclick="copyResource('{{ rec.title }}', '{{ rec.url }}')"
+                      class="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-all">
+                Copy
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Add Your Own CTA -->
+    <div class="glass rounded-2xl shadow-xl p-8 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white text-center">
+      <h2 class="text-2xl font-bold mb-2">Have a resource to share?</h2>
+      <p class="text-indigo-100 mb-6 max-w-xl mx-auto">
+        Found an amazing tutorial or course? Add it to your personal library to track your progress.
+      </p>
+      <a href="{{ url_for('resources.create') }}"
+         class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Add Custom Resource
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyResource(title, url) {
+  const text = `${title}\n${url}`;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Resource link copied! You can now add it from your library.');
+  }).catch(() => {
+    prompt('Copy this resource:', text);
+  });
+}
+</script>
+{% endblock %}
