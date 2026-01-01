@@ -1,0 +1,117 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Create Learning Roadmap{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 py-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-8 animate-scale-in">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold gradient-text">Create Your Learning Roadmap</h1>
+      <p class="mt-2 text-gray-600">
+        Build a personalized learning path tailored to your goals and timeline
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="glass rounded-2xl shadow-xl p-8 mb-8">
+      <form method="POST" class="space-y-6">
+        {{ form.hidden_tag() }}
+
+        <!-- Title -->
+        <div>
+          {{ form.title.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
+          {{ form.title(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+          {% if form.title.description %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.title.description }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div>
+          {{ form.description.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
+          {{ form.description(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50", rows="3") }}
+          {% if form.description.description %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.description.description }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            {{ form.target_role.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
+            {{ form.target_role(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+            {% if form.target_role.description %}
+              <p class="mt-1 text-xs text-gray-500">{{ form.target_role.description }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            {{ form.timeline_weeks.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
+            {{ form.timeline_weeks(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+          </div>
+        </div>
+
+        <!-- Focus Areas -->
+        <div>
+          {{ form.focus_areas.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
+          {{ form.focus_areas(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50", rows="2") }}
+          {% if form.focus_areas.description %}
+            <p class="mt-1 text-xs text-gray-500">{{ form.focus_areas.description }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Assessment Info -->
+        {% if assessment and assessment.recommendations %}
+          <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+            <div class="flex items-start space-x-3">
+              <svg class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <h3 class="font-semibold text-indigo-900 text-sm">Based on your assessment</h3>
+                <p class="mt-1 text-sm text-indigo-800">
+                  Recommended role: <strong>{{ assessment.recommendations.recommended_roles[0] if assessment.recommendations.recommended_roles else 'DevOps Engineer' }}</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          {{ form.submit(class="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 transition-all duration-200 transform hover:-translate-y-0.5 text-lg") }}
+        </div>
+      </form>
+
+      <div class="mt-6 text-center">
+        <a href="{{ url_for('roadmap.list_roadmaps') }}" class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+          Cancel
+        </a>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+      <div class="flex items-start space-x-3">
+        <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-blue-900">Tips for creating your roadmap</h3>
+          <ul class="mt-2 text-sm text-blue-800 space-y-1">
+            <li>• Choose a realistic timeline based on your available learning time</li>
+            <li>• Focus on 2-3 key technologies rather than trying to learn everything</li>
+            <li>• Your roadmap can be adjusted as you progress</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

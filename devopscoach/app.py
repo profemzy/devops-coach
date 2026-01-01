@@ -17,6 +17,7 @@ from devopscoach.extensions import (
     migrate,
 )
 from devopscoach.page.views import page
+from devopscoach.roadmap import roadmap
 from devopscoach.skills import skills
 from devopscoach.up.views import up
 
@@ -65,6 +66,7 @@ def create_app(settings_override=None):
     app.register_blueprint(up)
     app.register_blueprint(page)
     app.register_blueprint(skills, url_prefix="/skills")
+    app.register_blueprint(roadmap)
 
     extensions(app)
 
