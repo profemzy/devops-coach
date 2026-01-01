@@ -186,10 +186,6 @@ devopscoach/
 7. **Phase 7: Job Search** - Job tracking and market analysis
 8. **Phase 8: Polish** - Performance, optimizations, and final touches
 
-## Contributing
-
-This project is based on the [docker-flask-example](https://github.com/nickjj/docker-flask-example) template by Nick Janetakis.
-
 ## License
 
 MIT License - See LICENSE file for details
