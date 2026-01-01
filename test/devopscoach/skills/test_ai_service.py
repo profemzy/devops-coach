@@ -93,6 +93,7 @@ class TestAIService:
         # Ensure no API key so we use fallback directly
         # Need to patch settings since env var is already loaded
         import config.settings
+
         monkeypatch.setattr(config.settings, "OPENAI_API_KEY", None)
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 
