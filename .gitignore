@@ -144,6 +144,23 @@ Temporary Items
 .apdisk
 
 
+### IDEs #######################################################################
+
+# JetBrains IDEs (PyCharm, IntelliJ IDEA, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VSCode (keep some useful configs)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+
 ### Vim #######################################################################
 
 # Swap
@@ -166,14 +183,7 @@ tags
 [._]*.un~
 
 
-### VSCode ####################################################################
 
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
 
 
 ### Emacs #####################################################################
