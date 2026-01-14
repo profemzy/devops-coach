@@ -1,5 +1,5 @@
 FROM node:22.21.1-trixie-slim AS assets
-LABEL maintainer="Nick Janetakis <nick.janetakis@gmail.com>"
+LABEL maintainer="Femi Oladele <femioladele@infotitans.com>"
 
 WORKDIR /app/assets
 
@@ -34,7 +34,7 @@ CMD ["bash"]
 ###############################################################################
 
 FROM python:3.14.0-slim-trixie AS app-build
-LABEL maintainer="Nick Janetakis <nick.janetakis@gmail.com>"
+LABEL maintainer="Femi Oladele <femioladele@infotitans.com>"
 
 WORKDIR /app
 

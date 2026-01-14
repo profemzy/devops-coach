@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops-coach
+  labels:
+    name: devops-coach
+    istio-injection: enabled

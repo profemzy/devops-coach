@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-coach
+  namespace: devops-coach
+  labels:
+    app: devops-coach
+    environment: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-coach
+  template:
+    metadata:
+      labels:
+        app: devops-coach
+        environment: production
+    spec:
+      containers:
+        - name: devops-coach
+          image: prodacrva1ng1.azurecr.io/devops-coach:latest
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: POSTGRES_PORT
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: REDIS_URL
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: SECRET_KEY
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: OPENAI_API_KEY
+            - name: OPENAI_API_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: OPENAI_API_BASE
+            - name: OPENAI_MODEL
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: OPENAI_MODEL
+            - name: TAVILY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: devops-coach-secrets
+                  key: TAVILY_API_KEY
+            - name: GUNICORN_CMD_ARGS
+              value: "--workers 2 --bind 0.0.0.0:8000 --timeout 60"
+          ports:
+            - containerPort: 8000
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /up
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /up
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
