@@ -68,6 +68,13 @@ class AIService:
             )
 
             result = json.loads(response.choices[0].message.content)
+            
+            # Ensure required keys exist
+            defaults = self._get_fallback_analysis(skills_data, "Partial AI response")
+            for key, value in defaults.items():
+                if key not in result:
+                    result[key] = value
+                    
             return result
 
         except Exception as e:

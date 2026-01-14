@@ -33,7 +33,7 @@
             <svg class="w-32 h-32 transform -rotate-90">
               <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-200" />
               <circle cx="64" cy="64" r="56" stroke="url(#gradient)" stroke-width="8" fill="transparent"
-                      stroke-dasharray="{{ 351.8 * score / 100 }} 351.8"
+                      stroke-dasharray="{{ 351.8 * score|default(0) / 100 }} 351.8"
                       stroke-linecap="round" />
               <defs>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">

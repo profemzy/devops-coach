@@ -10,6 +10,18 @@ public/*
 !.env.example
 docker-compose.override.yml
 
+# Kubernetes secrets (contains sensitive base64-encoded data)
+k8s/secret.yaml
+k8s/*secret*.yaml
+!k8s/secret.yaml.example
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+*credentials*
+!.venv/lib/python*/site-packages/redis/credentials.py
+
 
 ### Python ####################################################################
 
