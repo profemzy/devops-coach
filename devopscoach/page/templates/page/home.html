@@ -6,25 +6,25 @@
 <section class="relative overflow-hidden">
   <!-- Decorative background -->
   <div class="absolute inset-0 -z-10">
-    <div class="absolute -top-24 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-400/40 via-purple-400/30 to-cyan-300/30 blur-3xl"></div>
-    <div class="absolute -bottom-24 right-0 h-[22rem] w-[22rem] rounded-full bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-400/20 blur-3xl"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-white/40 via-white/0 to-white/60"></div>
+    <div class="absolute -top-24 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-emerald-300/40 via-amber-300/30 to-rose-300/30 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-0 h-[22rem] w-[22rem] rounded-full bg-gradient-to-br from-amber-400/20 via-emerald-400/20 to-rose-300/20 blur-3xl"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white/50 via-white/0 to-white/70"></div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 sm:pt-24">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       <!-- Hero copy -->
-      <div class="lg:col-span-7">
-        <div class="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white/70 px-4 py-2 text-sm text-indigo-700 shadow-sm backdrop-blur">
-          <span class="inline-flex h-2 w-2 rounded-full bg-indigo-500"></span>
+      <div class="lg:col-span-7 reveal">
+        <div class="section-kicker">
+          <span class="inline-flex h-2 w-2 rounded-full bg-emerald-600"></span>
           AI-powered roadmap for your DevOps transition
         </div>
 
         <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900">
           Transition into DevOps with
-          <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">clarity</span>
+          <span class="brand-text">clarity</span>
           and
-          <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">momentum</span>
+          <span class="brand-text">momentum</span>
         </h1>
 
         <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl">
@@ -33,35 +33,45 @@
           and portfolio projects to prove you can do the work.
         </p>
 
-        <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center">
-          <a href="{{ url_for('auth.register') }}"
-             class="inline-flex items-center justify-center px-5 py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-indigo-500/25 transition-all">
-            Get Started Free
-            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center reveal reveal-delay-1">
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard.index') }}"
+               class="btn-primary">
+              Go to Dashboard
+              <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          {% else %}
+            <a href="{{ url_for('auth.register') }}"
+               class="btn-primary">
+              Get Started Free
+              <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
 
-          <a href="{{ url_for('auth.login') }}"
-             class="inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-slate-700 border border-slate-200 bg-white/80 hover:bg-white transition-all">
-            Sign in
-          </a>
+            <a href="{{ url_for('auth.login') }}"
+               class="btn-secondary">
+              Sign in
+            </a>
 
-          <div class="text-sm text-slate-500 sm:ml-2">
-            No credit card • Start in 3 minutes
-          </div>
+            <div class="text-sm text-slate-500 sm:ml-2">
+              No credit card • Start in 3 minutes
+            </div>
+          {% endif %}
         </div>
 
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
-          <div class="rounded-2xl border border-indigo-100 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl reveal reveal-delay-2">
+          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
             <div class="text-sm font-semibold text-slate-900">Skills assessment</div>
             <div class="text-sm text-slate-600 mt-1">Know your gaps, prioritize smartly.</div>
           </div>
-          <div class="rounded-2xl border border-indigo-100 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
+          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
             <div class="text-sm font-semibold text-slate-900">Learning roadmap</div>
             <div class="text-sm text-slate-600 mt-1">Weeks and milestones, not guesswork.</div>
           </div>
-          <div class="rounded-2xl border border-indigo-100 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
+          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
             <div class="text-sm font-semibold text-slate-900">Portfolio projects</div>
             <div class="text-sm text-slate-600 mt-1">Build proof employers can trust.</div>
           </div>
@@ -69,16 +79,16 @@
       </div>
 
       <!-- Hero preview card -->
-      <div class="lg:col-span-5">
-        <div class="relative rounded-3xl bg-white/70 backdrop-blur border border-indigo-100 shadow-xl overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/60 via-white/30 to-purple-50/60"></div>
+      <div class="lg:col-span-5 reveal reveal-delay-1">
+        <div class="relative rounded-3xl bg-white/70 backdrop-blur border border-white/60 shadow-xl overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/60 via-white/30 to-amber-50/60"></div>
           <div class="relative p-6 sm:p-8">
             <div class="flex items-center justify-between">
               <div>
                 <div class="text-sm font-semibold text-slate-900">Example outcome</div>
                 <div class="text-xs text-slate-500">Generated after one assessment</div>
               </div>
-              <div class="inline-flex items-center rounded-full bg-indigo-600 text-white text-xs font-semibold px-3 py-1">
+              <div class="inline-flex items-center rounded-full bg-emerald-600 text-white text-xs font-semibold px-3 py-1">
                 Ready in minutes
               </div>
             </div>
@@ -87,10 +97,10 @@
               <div class="rounded-2xl bg-white/80 border border-slate-100 p-4">
                 <div class="flex items-center justify-between">
                   <div class="text-sm font-semibold text-slate-900">DevOps readiness</div>
-                  <div class="text-sm font-bold text-indigo-700">72/100</div>
+                  <div class="text-sm font-bold text-emerald-700">72/100</div>
                 </div>
                 <div class="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div class="h-full w-[72%] bg-gradient-to-r from-indigo-600 to-purple-600"></div>
+                  <div class="h-full w-[72%] bg-gradient-to-r from-emerald-600 to-amber-500"></div>
                 </div>
               </div>
 
@@ -98,15 +108,15 @@
                 <div class="text-sm font-semibold text-slate-900">Top priorities</div>
                 <ul class="mt-3 space-y-2 text-sm text-slate-700">
                   <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-indigo-500"></span>
+                    <span class="mt-1 h-2 w-2 rounded-full bg-emerald-500"></span>
                     Build CI/CD pipeline with GitHub Actions
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-purple-500"></span>
+                    <span class="mt-1 h-2 w-2 rounded-full bg-amber-500"></span>
                     Infrastructure as Code (Terraform) fundamentals
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-cyan-500"></span>
+                    <span class="mt-1 h-2 w-2 rounded-full bg-rose-500"></span>
                     Docker + Kubernetes deployment project
                   </li>
                 </ul>
@@ -115,17 +125,17 @@
               <div class="rounded-2xl bg-white/80 border border-slate-100 p-4">
                 <div class="text-sm font-semibold text-slate-900">Suggested roles</div>
                 <div class="mt-3 flex flex-wrap gap-2">
-                  <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 text-xs font-semibold px-3 py-1">DevOps Engineer</span>
-                  <span class="inline-flex items-center rounded-full bg-purple-50 text-purple-700 border border-purple-100 text-xs font-semibold px-3 py-1">Platform Engineer</span>
+                  <span class="tag-pill">DevOps Engineer</span>
+                  <span class="tag-pill">Platform Engineer</span>
                   <span class="inline-flex items-center rounded-full bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3 py-1">SRE (Junior)</span>
                 </div>
               </div>
 
-              <div class="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-600 to-purple-600 p-4 text-white">
+              <div class="rounded-2xl border border-white/40 bg-gradient-to-r from-emerald-600 to-amber-500 p-4 text-white">
                 <div class="flex items-center justify-between">
                   <div>
                     <div class="text-sm font-semibold">Start with your assessment</div>
-                    <div class="text-xs text-indigo-100">It takes about 3 minutes.</div>
+                    <div class="text-xs text-white/80">It takes about 3 minutes.</div>
                   </div>
                   <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -147,7 +157,7 @@
 <section id="features" class="py-16 sm:py-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
-      <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 px-4 py-2 text-sm font-semibold">
+      <div class="section-kicker justify-center">
         Features
       </div>
       <h2 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
@@ -159,8 +169,8 @@
     </div>
 
     <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -171,8 +181,8 @@
         </p>
       </div>
 
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
@@ -183,8 +193,8 @@
         </p>
       </div>
 
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
@@ -195,8 +205,8 @@
         </p>
       </div>
 
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
           </svg>
@@ -207,8 +217,8 @@
         </p>
       </div>
 
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
@@ -219,8 +229,8 @@
         </p>
       </div>
 
-      <div class="group rounded-3xl border border-slate-200 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md">
+      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
@@ -236,23 +246,23 @@
 
 <section class="py-16 sm:py-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="rounded-3xl overflow-hidden border border-indigo-100 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-xl">
+    <div class="rounded-3xl overflow-hidden border border-white/40 bg-gradient-to-r from-emerald-600 via-emerald-500 to-amber-500 shadow-xl">
       <div class="p-8 sm:p-12 lg:p-14 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
         <div>
           <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Ready to start your DevOps journey?
           </h2>
-          <p class="mt-3 text-indigo-100 text-lg max-w-2xl">
+          <p class="mt-3 text-white/80 text-lg max-w-2xl">
             Create a free account, complete your assessment, and get a roadmap you can follow.
           </p>
         </div>
         <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <a href="{{ url_for('auth.register') }}"
-             class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-indigo-700 bg-white hover:bg-indigo-50 shadow-lg transition-all">
+             class="btn-secondary">
             Get Started Free
           </a>
           <a href="{{ url_for('auth.login') }}"
-             class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-white border border-white/30 bg-white/10 hover:bg-white/15 transition-all">
+             class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-white border border-white/40 bg-white/10 hover:bg-white/20 transition-all">
             Sign in
           </a>
         </div>

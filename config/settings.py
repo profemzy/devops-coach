@@ -25,9 +25,9 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 CELERY_CONFIG = {
     "broker_url": REDIS_URL,
     "result_backend": REDIS_URL,
-    "include": ["devopscoach.tasks"],
+    "include": ["devopscoach.tasks.ai_tasks"],
     "task_routes": {
-        "devopscoach.tasks.ai_tasks.*": {"queue": "ai_tasks"},
+        "devopscoach.tasks.ai_tasks.*": {"queue": "celery"},
         "devopscoach.tasks.job_scraping.*": {"queue": "job_scraping"},
         "devopscoach.tasks.email_tasks.*": {"queue": "email_tasks"},
     },
@@ -35,8 +35,11 @@ CELERY_CONFIG = {
 
 # OpenAI Compatible API.
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
+OPENAI_API_BASE = os.getenv(
+    "OPENAI_API_BASE",
+    "https://profemzy-5149-resource.openai.azure.com/openai/v1/",
+)
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.2")
 
 # Email.
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")

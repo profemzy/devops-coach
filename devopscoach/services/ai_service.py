@@ -64,14 +64,23 @@ class AIService:
                 ],
                 response_format={"type": "json_object"},
                 temperature=0.7,
-                max_tokens=2000,
+                max_completion_tokens=2000,
             )
 
-            result = json.loads(response.choices[0].message.content)
+            content = response.choices[0].message.content or ""
+            try:
+                result = json.loads(content)
+            except json.JSONDecodeError:
+                return self._get_fallback_analysis(
+                    skills_data,
+                    "AI response was not valid JSON",
+                )
 
             # Ensure required keys exist
             defaults = self._get_fallback_analysis(
-                skills_data, "Partial AI response"
+                skills_data,
+                "Partial AI response",
+                include_note=False,
             )
             for key, value in defaults.items():
                 if key not in result:
@@ -180,7 +189,11 @@ Provide a JSON response with the following structure:
 """
 
     def _get_fallback_analysis(
-        self, skills_data: Dict[str, Any], error: str
+        self,
+        skills_data: Dict[str, Any],
+        error: str,
+        *,
+        include_note: bool = True,
     ) -> Dict[str, Any]:
         """Provide fallback analysis if AI service fails."""
         # Determine readiness level based on experience
@@ -230,7 +243,7 @@ Provide a JSON response with the following structure:
         if "data" in current_role or "analytics" in current_role:
             recommended_roles = ["Data Platform Engineer", "DevOps Engineer"]
 
-        return {
+        result = {
             "overall_score": min(score, 100),
             "readiness_level": readiness,
             "strengths": [
@@ -299,8 +312,11 @@ Provide a JSON response with the following structure:
                 "Practice Docker daily",
                 "Join DevOps communities",
             ],
-            "fallback_note": f"AI service unavailable: {error}",
         }
+        if include_note:
+            result["fallback_note"] = f"AI service unavailable: {error}"
+
+        return result
 
 
 # Singleton instance

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="min-h-screen">
   <!-- Header Section -->
-  <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-lg">
+  <div class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-500 shadow-lg">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center space-x-4">
@@ -16,7 +16,7 @@
             <h1 class="text-3xl font-bold text-white">
               Welcome back, {{ current_user.username }}!
             </h1>
-            <p class="mt-1 text-indigo-100">
+            <p class="mt-1 text-white/80">
               Your DevOps journey starts here. What would you like to do today?
             </p>
           </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="ml-4">
               <p class="text-2xl font-bold text-white">{{ assessment_count }}</p>
-              <p class="text-sm text-indigo-200">Skills Assessed</p>
+              <p class="text-sm text-white/70">Skills Assessed</p>
             </div>
           </div>
         </div>
@@ -47,7 +47,7 @@
     <!-- Getting Started -->
     <div class="glass rounded-2xl shadow-xl p-6 mb-8">
       <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-        <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-6 h-6 mr-2 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
         Getting Started
@@ -57,14 +57,14 @@
       </p>
       <div class="flex flex-wrap gap-3">
         <a href="{{ url_for('skills.assessment') }}"
-           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-200 group">
+           class="btn-primary">
           <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Take Skills Assessment
         </a>
         <a href="{{ url_for('roadmap.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:shadow-green-500/25 transition-all duration-200 group">
+           class="btn-secondary">
           <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
@@ -86,11 +86,11 @@
       <!-- Skills Assessment Card -->
       <a href="{{ url_for('skills.assessment') }}"
          class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover block">
-        <div class="h-2 bg-gradient-to-r from-indigo-500 to-indigo-600"></div>
+        <div class="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
         <div class="p-6">
           <div class="flex items-start justify-between">
             <div class="flex-shrink-0">
-              <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-indigo-500/25 group-hover:scale-110 transition-all duration-300">
+              <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/25 group-hover:scale-110 transition-all duration-300">
                 <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -104,7 +104,7 @@
           <p class="mt-2 text-sm text-gray-600">
             AI-powered analysis of your current skills against DevOps requirements. Identify gaps and get personalized recommendations.
           </p>
-          <div class="mt-4 flex items-center text-indigo-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          <div class="mt-4 flex items-center text-emerald-700 text-sm font-medium group-hover:translate-x-1 transition-transform">
             <span>Start Assessment</span>
             <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -116,11 +116,11 @@
       <!-- Learning Roadmap Card -->
       <a href="{{ url_for('roadmap.list_roadmaps') }}"
          class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover block">
-        <div class="h-2 bg-gradient-to-r from-green-500 to-emerald-600"></div>
+        <div class="h-2 bg-gradient-to-r from-amber-500 to-orange-600"></div>
         <div class="p-6">
           <div class="flex items-start justify-between">
             <div class="flex-shrink-0">
-              <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 group-hover:scale-110 transition-all duration-300">
+              <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-amber-500/25 group-hover:scale-110 transition-all duration-300">
                 <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
@@ -134,7 +134,7 @@
           <p class="mt-2 text-sm text-gray-600">
             Get personalized learning paths based on your background and career goals. Track your progress as you learn.
           </p>
-          <div class="mt-4 flex items-center text-green-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          <div class="mt-4 flex items-center text-amber-700 text-sm font-medium group-hover:translate-x-1 transition-transform">
             <span>View Roadmaps</span>
             <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -146,11 +146,11 @@
       <!-- Learning Resources Card -->
       <a href="{{ url_for('resources.list_resources') }}"
          class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover block">
-        <div class="h-2 bg-gradient-to-r from-yellow-500 to-amber-600"></div>
+        <div class="h-2 bg-gradient-to-r from-sky-500 to-cyan-600"></div>
         <div class="p-6">
           <div class="flex items-start justify-between">
             <div class="flex-shrink-0">
-              <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-yellow-500/25 group-hover:scale-110 transition-all duration-300">
+              <div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/25 group-hover:scale-110 transition-all duration-300">
                 <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
@@ -164,7 +164,7 @@
           <p class="mt-2 text-sm text-gray-600">
             Access hand-picked tutorials, courses, and certifications. Save and organize resources for easy reference.
           </p>
-          <div class="mt-4 flex items-center text-amber-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          <div class="mt-4 flex items-center text-cyan-700 text-sm font-medium group-hover:translate-x-1 transition-transform">
             <span>View Resources</span>
             <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -175,11 +175,11 @@
 
       <!-- Portfolio Projects Card -->
       <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 card-hover">
-        <div class="h-2 bg-gradient-to-r from-purple-500 to-violet-600"></div>
+        <div class="h-2 bg-gradient-to-r from-amber-500 to-rose-500"></div>
         <div class="p-6">
           <div class="flex items-start justify-between">
             <div class="flex-shrink-0">
-              <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 group-hover:scale-110 transition-all duration-300">
+              <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-amber-500/25 group-hover:scale-110 transition-all duration-300">
                 <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
@@ -193,7 +193,7 @@
           <p class="mt-2 text-sm text-gray-600">
             Build hands-on DevOps projects to showcase your skills. Get project ideas and track your portfolio.
           </p>
-          <div class="mt-4 flex items-center text-purple-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+          <div class="mt-4 flex items-center text-rose-700 text-sm font-medium group-hover:translate-x-1 transition-transform">
             <span>Learn more</span>
             <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

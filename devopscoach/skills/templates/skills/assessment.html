@@ -3,11 +3,11 @@
 {% block title %}Skills Assessment{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 py-8">
+<div class="min-h-screen py-8">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="text-center mb-8 animate-scale-in">
-      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-4 animate-pulse-glow">
+      <div class="inline-flex items-center justify-center w-16 h-16 brand-gradient rounded-2xl shadow-lg mb-4 animate-pulse-glow">
         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -20,30 +20,30 @@
 
     <!-- Form Card -->
     <div class="glass rounded-2xl shadow-xl p-8 mb-8">
-      <form method="POST" class="space-y-8">
+      <form method="POST" class="space-y-8" id="skills-assessment-form">
         {{ form.hidden_tag() }}
 
         <!-- Section 1: Current Role & Experience -->
         <div class="space-y-6">
           <div class="flex items-center space-x-3 pb-2 border-b border-gray-200">
-            <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-              <span class="text-indigo-600 font-bold">1</span>
+            <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+              <span class="text-emerald-700 font-bold">1</span>
             </div>
             <h2 class="text-xl font-semibold text-gray-900">Current Role & Experience</h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              {{ form.current_role.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.current_role(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.current_role.label(class="field-label mb-2") }}
+              {{ form.current_role(class_="field-input") }}
               {% if form.current_role.description %}
                 <p class="mt-1 text-xs text-gray-500">{{ form.current_role.description }}</p>
               {% endif %}
             </div>
 
             <div>
-              {{ form.years_of_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.years_of_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.years_of_experience.label(class="field-label mb-2") }}
+              {{ form.years_of_experience(class_="field-input") }}
             </div>
           </div>
         </div>
@@ -51,54 +51,54 @@
         <!-- Section 2: Technical Skills -->
         <div class="space-y-6">
           <div class="flex items-center space-x-3 pb-2 border-b border-gray-200">
-            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-              <span class="text-purple-600 font-bold">2</span>
+            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+              <span class="text-amber-700 font-bold">2</span>
             </div>
             <h2 class="text-xl font-semibold text-gray-900">Technical Skills</h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              {{ form.programming_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.programming_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.programming_experience.label(class="field-label mb-2") }}
+              {{ form.programming_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.programming_languages.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.programming_languages(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50", rows="2") }}
+              {{ form.programming_languages.label(class="field-label mb-2") }}
+              {{ form.programming_languages(class_="field-input", rows="2") }}
               {% if form.programming_languages.description %}
                 <p class="mt-1 text-xs text-gray-500">{{ form.programming_languages.description }}</p>
               {% endif %}
             </div>
 
             <div>
-              {{ form.linux_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.linux_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.linux_experience.label(class="field-label mb-2") }}
+              {{ form.linux_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.cloud_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.cloud_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.cloud_experience.label(class="field-label mb-2") }}
+              {{ form.cloud_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.containers_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.containers_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.containers_experience.label(class="field-label mb-2") }}
+              {{ form.containers_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.cicd_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.cicd_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.cicd_experience.label(class="field-label mb-2") }}
+              {{ form.cicd_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.iac_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.iac_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.iac_experience.label(class="field-label mb-2") }}
+              {{ form.iac_experience(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.monitoring_experience.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.monitoring_experience(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.monitoring_experience.label(class="field-label mb-2") }}
+              {{ form.monitoring_experience(class_="field-input") }}
             </div>
           </div>
         </div>
@@ -106,41 +106,41 @@
         <!-- Section 3: Learning Preferences -->
         <div class="space-y-6">
           <div class="flex items-center space-x-3 pb-2 border-b border-gray-200">
-            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-              <span class="text-green-600 font-bold">3</span>
+            <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
+              <span class="text-rose-700 font-bold">3</span>
             </div>
             <h2 class="text-xl font-semibold text-gray-900">Learning Preferences</h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              {{ form.preferred_learning_style.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.preferred_learning_style(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.preferred_learning_style.label(class="field-label mb-2") }}
+              {{ form.preferred_learning_style(class_="field-input") }}
             </div>
 
             <div>
-              {{ form.weekly_learning_hours.label(class="block text-sm font-semibold text-gray-700 mb-2") }}
-              {{ form.weekly_learning_hours(class_="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50") }}
+              {{ form.weekly_learning_hours.label(class="field-label mb-2") }}
+              {{ form.weekly_learning_hours(class_="field-input") }}
             </div>
           </div>
         </div>
 
         <!-- Submit Button -->
         <div class="pt-4">
-          {{ form.submit(class="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 transition-all duration-200 transform hover:-translate-y-0.5 text-lg") }}
+          {{ form.submit(class="btn-primary w-full text-lg", id="skills-submit") }}
         </div>
       </form>
     </div>
 
     <!-- Tips Section -->
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
       <div class="flex items-start space-x-3">
-        <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-6 h-6 text-emerald-700 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
-          <h3 class="font-semibold text-blue-900">Tips for best results</h3>
-          <ul class="mt-2 text-sm text-blue-800 space-y-1">
+          <h3 class="font-semibold text-emerald-900">Tips for best results</h3>
+          <ul class="mt-2 text-sm text-emerald-800 space-y-1">
             <li>• Be honest about your current skill level - this helps create accurate recommendations</li>
             <li>• Think about where you want to be in 6-12 months when setting goals</li>
             <li>• Consider your available time for learning when choosing weekly hours</li>
@@ -150,4 +150,43 @@
     </div>
   </div>
 </div>
+
+<div id="skills-processing-overlay"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+  <div class="glass rounded-2xl shadow-xl px-8 py-6 text-center max-w-md mx-4">
+    <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/80 mb-4 mx-auto">
+      <svg class="w-8 h-8 text-emerald-600 animate-spin" viewBox="0 0 24 24">
+        <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+        <path class="opacity-80" fill="currentColor"
+              d="M12 2a10 10 0 00-9.95 9h4.05a6 6 0 016-5.95V2z" />
+      </svg>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900">Analyzing your profile</h3>
+    <p class="mt-2 text-sm text-gray-600">
+      We are generating personalized DevOps recommendations. This can take a moment.
+    </p>
+    <div class="mt-4 text-xs text-gray-500" aria-live="polite">
+      Please keep this tab open.
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("skills-assessment-form");
+  const overlay = document.getElementById("skills-processing-overlay");
+  const submitButton = document.getElementById("skills-submit");
+
+  if (form) {
+    form.addEventListener("submit", () => {
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.classList.add("opacity-70", "cursor-wait");
+      }
+      if (overlay) {
+        overlay.classList.remove("hidden");
+        overlay.classList.add("flex");
+      }
+    });
+  }
+</script>
 {% endblock %}

@@ -1,6 +1,6 @@
 """Views for skills assessment."""
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from devopscoach.extensions import db
@@ -8,6 +8,7 @@ from devopscoach.models import SkillAssessment
 from devopscoach.services.ai_service import get_ai_service
 from devopscoach.skills import skills
 from devopscoach.skills.forms import SkillsAssessmentForm
+from devopscoach.tasks.ai_tasks import analyze_skills_assessment
 
 
 @skills.route("/assessment", methods=["GET", "POST"])
@@ -80,27 +81,22 @@ def results(assessment_id):
         user_id=current_user.id,
     ).first_or_404()
 
-    # Generate recommendations if not already done
-    if assessment.recommendations is None:
-        try:
-            ai_service = get_ai_service()
-            recommendations = ai_service.analyze_skills(
-                assessment.assessment_data
-            )
-            assessment.recommendations = recommendations
+    recommendations = assessment.recommendations or {}
+    is_pending = (
+        isinstance(recommendations, dict)
+        and recommendations.get("status") == "pending"
+    )
+
+    if assessment.recommendations is None or is_pending:
+        if request.args.get("retry") == "1" or assessment.recommendations is None:
+            assessment.recommendations = {"status": "pending"}
             db.session.commit()
-        except Exception as e:
-            flash(
-                f"Unable to generate AI recommendations. Using fallback analysis. Error: {e}",
-                "warning",
-            )
-            # Fallback will be handled by the AI service
-            ai_service = get_ai_service()
-            recommendations = ai_service.analyze_skills(
-                assessment.assessment_data
-            )
-            assessment.recommendations = recommendations
-            db.session.commit()
+            analyze_skills_assessment.delay(assessment.id)
+
+        return render_template(
+            "skills/results_loading.html",
+            assessment=assessment,
+        )
 
     recommendations = assessment.recommendations
 
@@ -109,6 +105,24 @@ def results(assessment_id):
         assessment=assessment,
         recommendations=recommendations,
     )
+
+
+@skills.route("/results/<int:assessment_id>/status")
+@login_required
+def results_status(assessment_id):
+    """Return whether recommendations are ready."""
+    assessment = SkillAssessment.query.filter_by(
+        id=assessment_id,
+        user_id=current_user.id,
+    ).first_or_404()
+
+    recommendations = assessment.recommendations or {}
+    ready = not (
+        isinstance(recommendations, dict)
+        and recommendations.get("status") == "pending"
+    )
+
+    return jsonify({"ready": ready})
 
 
 @skills.route("/history")

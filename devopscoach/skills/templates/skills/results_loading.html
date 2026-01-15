@@ -1,0 +1,62 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Generating Results{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-16 px-4">
+  <div class="glass rounded-3xl shadow-xl p-10 max-w-lg w-full text-center">
+    <div class="w-16 h-16 rounded-2xl bg-white/80 flex items-center justify-center mx-auto">
+      <svg class="w-9 h-9 text-emerald-600 animate-spin" viewBox="0 0 24 24">
+        <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+        <path class="opacity-80" fill="currentColor"
+              d="M12 2a10 10 0 00-9.95 9h4.05a6 6 0 016-5.95V2z" />
+      </svg>
+    </div>
+    <h1 class="mt-6 text-3xl font-bold text-gray-900">Building your roadmap</h1>
+    <p class="mt-3 text-gray-600">
+      We are analyzing your assessment and generating tailored DevOps
+      recommendations. This usually takes under a minute.
+    </p>
+
+    <div class="mt-6 flex items-center justify-center space-x-4 text-sm text-gray-500">
+      <span>Assessment submitted</span>
+      <span>•</span>
+      <span>AI analysis running</span>
+    </div>
+
+    <div class="mt-8 flex items-center justify-center gap-3">
+      <a href="{{ url_for('skills.results', assessment_id=assessment.id, retry=1) }}"
+         class="btn-secondary">
+        Restart Analysis
+      </a>
+      <a href="{{ url_for('dashboard.index') }}"
+         class="btn-ghost">
+        Back to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const statusUrl = "{{ url_for('skills.results_status', assessment_id=assessment.id) }}";
+  const resultsUrl = "{{ url_for('skills.results', assessment_id=assessment.id) }}";
+
+  async function pollStatus() {
+    try {
+      const response = await fetch(statusUrl, { cache: "no-store" });
+      if (!response.ok) {
+        return;
+      }
+      const payload = await response.json();
+      if (payload.ready) {
+        window.location.href = resultsUrl;
+      }
+    } catch (error) {
+      return;
+    }
+  }
+
+  pollStatus();
+  setInterval(pollStatus, 2500);
+</script>
+{% endblock %}

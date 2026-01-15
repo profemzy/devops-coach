@@ -3,7 +3,7 @@
 {% block title %}My Learning Resources{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 py-8">
+<div class="min-h-screen py-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
@@ -15,14 +15,14 @@
       </div>
       <div class="flex items-center space-x-3">
         <a href="{{ url_for('resources.explore') }}"
-           class="inline-flex items-center px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200">
+           class="btn-secondary">
           <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           Explore
         </a>
         <a href="{{ url_for('resources.create') }}"
-           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 transition-all duration-200 transform hover:-translate-y-0.5">
+           class="btn-primary">
           <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
@@ -35,7 +35,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <div class="glass rounded-xl p-5">
         <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+          <div class="w-12 h-12 brand-gradient rounded-xl flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
@@ -82,11 +82,11 @@
                  name="search"
                  value="{{ filters.search or '' }}"
                  placeholder="Search resources..."
-                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                 class="field-input">
         </div>
         <div class="flex flex-wrap gap-3">
           <select name="type"
-                  class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                  class="field-input bg-white">
             <option value="">All Types</option>
             <option value="course" {% if filters.type == 'course' %}selected{% endif %}>Course</option>
             <option value="video" {% if filters.type == 'video' %}selected{% endif %}>Video</option>
@@ -96,20 +96,20 @@
             <option value="certification" {% if filters.type == 'certification' %}selected{% endif %}>Certification</option>
           </select>
           <select name="difficulty"
-                  class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                  class="field-input bg-white">
             <option value="">All Levels</option>
             <option value="beginner" {% if filters.difficulty == 'beginner' %}selected{% endif %}>Beginner</option>
             <option value="intermediate" {% if filters.difficulty == 'intermediate' %}selected{% endif %}>Intermediate</option>
             <option value="advanced" {% if filters.difficulty == 'advanced' %}selected{% endif %}>Advanced</option>
           </select>
           <select name="status"
-                  class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                  class="field-input bg-white">
             <option value="">All Status</option>
             <option value="in_progress" {% if filters.status == 'in_progress' %}selected{% endif %}>In Progress</option>
             <option value="completed" {% if filters.status == 'completed' %}selected{% endif %}>Completed</option>
           </select>
           <button type="submit"
-                  class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                  class="btn-primary px-6 py-2 text-sm">
             Filter
           </button>
           <a href="{{ url_for('resources.list_resources') }}"
@@ -127,7 +127,7 @@
       {% for tag in all_tags[:10] %}
       <a href="{{ url_for('resources.list_resources', tag=tag) }}"
          class="px-3 py-1 text-sm rounded-full
-                {% if filters.tag == tag %}bg-indigo-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}
+                {% if filters.tag == tag %}bg-emerald-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}
                 transition-colors">
         {{ tag }}
       </a>
@@ -141,7 +141,7 @@
         {% for resource in resources %}
           <div class="glass rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden {% if resource.is_completed %}opacity-75{% endif %}">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 flex items-center justify-between">
+            <div class="bg-gradient-to-r from-emerald-600 to-amber-500 px-4 py-3 flex items-center justify-between">
               <span class="text-xs font-semibold text-white uppercase bg-white/20 px-2 py-1 rounded-full">
                 {{ resource.resource_type|replace('_', ' ')|title }}
               </span>
@@ -184,7 +184,7 @@
               {% if resource.tags %}
                 <div class="flex flex-wrap gap-1 mb-4">
                   {% for tag in resource.tags[:3] %}
-                    <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-xs rounded-full">{{ tag }}</span>
+                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs rounded-full">{{ tag }}</span>
                   {% endfor %}
                   {% if resource.tags|length > 3 %}
                     <span class="text-xs text-gray-500">+{{ resource.tags|length - 3 }}</span>
@@ -196,7 +196,7 @@
               <div class="flex items-center justify-between pt-3 border-t border-gray-100">
                 <div class="flex space-x-2">
                   <a href="{{ url_for('resources.detail', resource_id=resource.id) }}"
-                     class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                     class="text-emerald-700 hover:text-emerald-600 text-sm font-medium">
                     View
                   </a>
                   <a href="{{ url_for('resources.edit', resource_id=resource.id) }}"
@@ -225,8 +225,8 @@
     {% else %}
       <!-- Empty State -->
       <div class="glass rounded-2xl shadow-xl p-12 text-center">
-        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6">
-          <svg class="w-10 h-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-100 to-amber-100 rounded-full mb-6">
+          <svg class="w-10 h-10 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
         </div>
@@ -236,14 +236,14 @@
         </p>
         <div class="flex justify-center gap-4">
           <a href="{{ url_for('resources.explore') }}"
-             class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-200">
+             class="btn-secondary">
             <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             Explore Resources
           </a>
           <a href="{{ url_for('resources.create') }}"
-             class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 transition-all duration-200">
+             class="btn-primary">
             <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>

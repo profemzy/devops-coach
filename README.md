@@ -85,8 +85,8 @@ REDIS_URL=redis://redis:6379/0
 
 # OpenAI Compatible API (required for AI features)
 OPENAI_API_KEY=your_api_key_here
-OPENAI_API_BASE=https://api.openai.com/v1
-OPENAI_MODEL=gpt-4
+OPENAI_API_BASE=https://profemzy-5149-resource.openai.azure.com/openai/v1/
+OPENAI_MODEL=gpt-5.2
 
 # Tavily Web Search API (for up-to-date DevOps trends)
 TAVILY_API_KEY=your_tavily_api_key_here

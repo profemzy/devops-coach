@@ -44,6 +44,9 @@ def create():
             user_id=current_user.id
         ).first()
 
+    if request.method in ("GET", "POST"):
+        _prefill_roadmap_form(form, assessment)
+
     if form.validate_on_submit():
         # Generate roadmap data
         roadmap_data = _generate_roadmap_data(
@@ -64,27 +67,6 @@ def create():
 
         flash("Your learning roadmap has been created!", "success")
         return redirect(url_for("roadmap.detail", roadmap_id=roadmap.id))
-
-    # Pre-fill with assessment data if available
-    if (
-        assessment
-        and request.method == "GET"
-        and hasattr(assessment, "recommendations")
-        and assessment.recommendations
-    ):
-        rec = assessment.recommendations
-        # Pre-fill target role with first recommended role
-        if "recommended_roles" in rec and rec["recommended_roles"]:
-            form.target_role.data = rec["recommended_roles"][0]
-        # Pre-fill focus areas from skill gaps
-        if "skill_gaps" in rec and rec["skill_gaps"]:
-            focus_areas = ", ".join(
-                [gap["skill"] for gap in rec["skill_gaps"][:5]]
-            )
-            form.focus_areas.data = focus_areas
-        # Set default title based on target role
-        if "recommended_roles" in rec and rec["recommended_roles"]:
-            form.title.data = f"My Path to {rec['recommended_roles'][0]}"
 
     return render_template(
         "roadmap/create.html",
@@ -368,6 +350,60 @@ def _generate_roadmap_data(
         "focus_areas": areas,
         "milestones": milestones,
     }
+
+
+def _prefill_roadmap_form(
+    form: CreateRoadmapForm, assessment: SkillAssessment | None
+) -> None:
+    """Pre-fill roadmap defaults without overriding user input."""
+    focus_items = []
+    if assessment and hasattr(assessment, "recommendations"):
+        rec = assessment.recommendations or {}
+        if rec.get("recommended_roles"):
+            raw_role = rec["recommended_roles"][0]
+            base_role, role_detail = _split_role_and_detail(raw_role)
+            if not form.target_role.data:
+                form.target_role.data = base_role
+            if not form.title.data:
+                form.title.data = f"My Path to {base_role}"
+            if role_detail and not form.description.data:
+                form.description.data = role_detail
+        if not form.focus_areas.data and rec.get("skill_gaps"):
+            for gap in rec["skill_gaps"][:5]:
+                if isinstance(gap, dict):
+                    skill = gap.get("skill")
+                    if skill:
+                        focus_items.append(skill)
+                else:
+                    focus_items.append(str(gap))
+            if focus_items:
+                form.focus_areas.data = ", ".join(focus_items)
+
+    if not form.target_role.data:
+        form.target_role.data = "DevOps Engineer"
+    if not form.title.data:
+        form.title.data = "My DevOps Roadmap"
+    if not form.description.data:
+        focus_label = ", ".join(focus_items) if focus_items else "core skills"
+        form.description.data = (
+            "Follow a focused plan to build "
+            f"{focus_label} aligned to your target role and timeline."
+        )
+
+
+def _split_role_and_detail(raw_role: str) -> tuple[str, str]:
+    """Split a long role string into a concise role and detail text."""
+    role_text = raw_role.strip()
+    detail = ""
+    if " - " in role_text:
+        base, tail = role_text.split(" - ", 1)
+        role_text = base.strip()
+        detail = tail.strip()
+    if len(role_text) > 100:
+        role_text = role_text[:100].rsplit(" ", 1)[0] or role_text[:100]
+    if role_text and len(role_text) < 2:
+        role_text = "DevOps Engineer"
+    return role_text, detail
 
 
 def _calculate_roadmap_progress(roadmap_data: dict) -> dict:

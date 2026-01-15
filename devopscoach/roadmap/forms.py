@@ -10,7 +10,7 @@ class CreateRoadmapForm(FlaskForm):
 
     title = StringField(
         "Roadmap Title",
-        validators=[DataRequired(), Length(min=3, max=200)],
+        validators=[DataRequired(), Length(min=2, max=200)],
         description="e.g., DevOps Engineer Learning Path",
     )
 
