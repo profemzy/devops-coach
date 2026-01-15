@@ -93,7 +93,9 @@ class TestResourceList(ViewTestMixin):
         with self.client.application.test_request_context():
             login_user(user)
 
-        response = self.client.get(url_for("resources.list_resources", type="course"))
+        response = self.client.get(
+            url_for("resources.list_resources", type="course")
+        )
         assert response.status_code == 200
         assert b"Docker Course" in response.data
         assert b"Docker Docs" not in response.data
@@ -110,7 +112,10 @@ class TestResourceList(ViewTestMixin):
         session.commit()
 
         resource1 = LearningResource(
-            user_id=user.id, title="Completed Course", resource_type="course", is_completed=True
+            user_id=user.id,
+            title="Completed Course",
+            resource_type="course",
+            is_completed=True,
         )
         resource2 = LearningResource(
             user_id=user.id,
@@ -176,7 +181,9 @@ class TestResourceCreate(ViewTestMixin):
         import re
 
         response = self.client.get(url_for("resources.create"))
-        match = re.search(rb'name="csrf_token".*?value="([^\"]+)"', response.data)
+        match = re.search(
+            rb'name="csrf_token".*?value="([^\"]+)"', response.data
+        )
         csrf_token = match.group(1).decode("utf-8") if match else ""
 
         data = {
@@ -239,7 +246,9 @@ class TestResourceDetail(ViewTestMixin):
         with self.client.application.test_request_context():
             login_user(user)
 
-        response = self.client.get(url_for("resources.detail", resource_id=resource.id))
+        response = self.client.get(
+            url_for("resources.detail", resource_id=resource.id)
+        )
         assert response.status_code == 200
         assert b"Test Resource" in response.data
 
@@ -250,7 +259,9 @@ class TestResourceToggle(ViewTestMixin):
     def test_toggle_requires_login(self):
         """Toggle should redirect to login if not authenticated."""
         self.client.get(url_for("auth.logout"))
-        response = self.client.post(url_for("resources.toggle_complete", resource_id=1))
+        response = self.client.post(
+            url_for("resources.toggle_complete", resource_id=1)
+        )
         assert response.status_code == 302
 
     def test_toggle_completion(self, session):
@@ -280,7 +291,9 @@ class TestResourceToggle(ViewTestMixin):
         response = self.client.get(url_for("resources.list_resources"))
         import re
 
-        match = re.search(rb'name="csrf_token".*?value="([^\"]+)"', response.data)
+        match = re.search(
+            rb'name="csrf_token".*?value="([^\"]+)"', response.data
+        )
         csrf_token = match.group(1).decode("utf-8") if match else ""
 
         # Toggle to completed
@@ -332,7 +345,9 @@ class TestResourceDelete(ViewTestMixin):
         response = self.client.get(url_for("resources.list_resources"))
         import re
 
-        match = re.search(rb'name="csrf_token".*?value="([^\"]+)"', response.data)
+        match = re.search(
+            rb'name="csrf_token".*?value="([^\"]+)"', response.data
+        )
         csrf_token = match.group(1).decode("utf-8") if match else ""
 
         # Delete

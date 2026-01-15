@@ -114,7 +114,9 @@ class TestRoadmapCreate(ViewTestMixin):
         import re
 
         response = self.client.get(url_for("roadmap.create"))
-        match = re.search(rb'name="csrf_token".*?value="([^"]+)"', response.data)
+        match = re.search(
+            rb'name="csrf_token".*?value="([^"]+)"', response.data
+        )
         csrf_token = match.group(1).decode("utf-8") if match else ""
 
         data = {
@@ -184,7 +186,9 @@ class TestRoadmapDetail(ViewTestMixin):
         with self.client.application.test_request_context():
             login_user(user)
 
-        response = self.client.get(url_for("roadmap.detail", roadmap_id=roadmap.id))
+        response = self.client.get(
+            url_for("roadmap.detail", roadmap_id=roadmap.id)
+        )
         assert response.status_code == 200
         assert b"Test Roadmap" in response.data
 
@@ -236,7 +240,9 @@ class TestRoadmapDetail(ViewTestMixin):
         with self.client.application.test_request_context():
             login_user(user)
 
-        response = self.client.get(url_for("roadmap.detail", roadmap_id=roadmap.id))
+        response = self.client.get(
+            url_for("roadmap.detail", roadmap_id=roadmap.id)
+        )
         assert response.status_code == 200
         # Check for progress indicator - either percentage or milestone count
         assert b"1/3" in response.data or b"50%" in response.data

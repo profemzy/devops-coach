@@ -39,13 +39,10 @@ def list_resources():
             | LearningResource.description.ilike(f"%{search}%")
         )
 
-    resources_list = (
-        query.order_by(
-            LearningResource.is_completed.asc(),
-            LearningResource.created_at.desc(),
-        )
-        .all()
-    )
+    resources_list = query.order_by(
+        LearningResource.is_completed.asc(),
+        LearningResource.created_at.desc(),
+    ).all()
 
     # Get all unique tags for filter sidebar
     all_tags = set()
