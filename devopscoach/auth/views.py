@@ -11,7 +11,7 @@ from devopscoach.models import User
 def login():
     """Handle user login."""
     if current_user.is_authenticated:
-        return redirect(url_for("dashboard.index"))
+        return redirect(url_for("page.home"))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -40,7 +40,7 @@ def login():
 def register():
     """Handle user registration."""
     if current_user.is_authenticated:
-        return redirect(url_for("dashboard.index"))
+        return redirect(url_for("page.home"))
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -80,4 +80,4 @@ def logout():
     """Handle user logout."""
     logout_user()
     flash("You have been logged out.", "info")
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("page.home"))

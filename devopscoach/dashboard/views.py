@@ -6,7 +6,7 @@ from devopscoach.models import SkillAssessment
 dashboard = Blueprint("dashboard", __name__, template_folder="templates")
 
 
-@dashboard.route("/")
+@dashboard.route("/dashboard/")
 @login_required
 def index():
     """Main dashboard page."""
