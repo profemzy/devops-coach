@@ -66,19 +66,25 @@ def create():
         return redirect(url_for("roadmap.detail", roadmap_id=roadmap.id))
 
     # Pre-fill with assessment data if available
-    if assessment and request.method == "GET":
-        if hasattr(assessment, "recommendations") and assessment.recommendations:
-            rec = assessment.recommendations
-            # Pre-fill target role with first recommended role
-            if "recommended_roles" in rec and rec["recommended_roles"]:
-                form.target_role.data = rec["recommended_roles"][0]
-            # Pre-fill focus areas from skill gaps
-            if "skill_gaps" in rec and rec["skill_gaps"]:
-                focus_areas = ", ".join([gap["skill"] for gap in rec["skill_gaps"][:5]])
-                form.focus_areas.data = focus_areas
-            # Set default title based on target role
-            if "recommended_roles" in rec and rec["recommended_roles"]:
-                form.title.data = f"My Path to {rec['recommended_roles'][0]}"
+    if (
+        assessment
+        and request.method == "GET"
+        and hasattr(assessment, "recommendations")
+        and assessment.recommendations
+    ):
+        rec = assessment.recommendations
+        # Pre-fill target role with first recommended role
+        if "recommended_roles" in rec and rec["recommended_roles"]:
+            form.target_role.data = rec["recommended_roles"][0]
+        # Pre-fill focus areas from skill gaps
+        if "skill_gaps" in rec and rec["skill_gaps"]:
+            focus_areas = ", ".join(
+                [gap["skill"] for gap in rec["skill_gaps"][:5]]
+            )
+            form.focus_areas.data = focus_areas
+        # Set default title based on target role
+        if "recommended_roles" in rec and rec["recommended_roles"]:
+            form.title.data = f"My Path to {rec['recommended_roles'][0]}"
 
     return render_template(
         "roadmap/create.html",
@@ -105,7 +111,9 @@ def detail(roadmap_id):
     )
 
 
-@roadmap.route("/<int:roadmap_id>/milestone/<int:milestone_index>", methods=["POST"])
+@roadmap.route(
+    "/<int:roadmap_id>/milestone/<int:milestone_index>", methods=["POST"]
+)
 @login_required
 def update_milestone(roadmap_id, milestone_index):
     """Update milestone progress."""
@@ -179,90 +187,180 @@ def _generate_roadmap_data(
     milestones = []
 
     # Phase 1: Foundations
-    milestones.append({
-        "phase": 1,
-        "title": "Foundation",
-        "duration_weeks": weeks_per_phase,
-        "skills": ["Linux Command Line", "Bash Scripting", "Git & GitHub", "Networking Basics"],
-        "resources": [
-            {"title": "Linux Journey", "url": "https://linuxjourney.com", "type": "course"},
-            {"title": "Bash Guide for Beginners", "url": "https://tldp.org/LDP/Bash-Beginners-Guide/html/", "type": "article"},
-        ],
-        "projects": ["Set up a Linux VM", "Create git repository with commits"],
-        "status": "not_started",
-        "notes": None,
-    })
+    milestones.append(
+        {
+            "phase": 1,
+            "title": "Foundation",
+            "duration_weeks": weeks_per_phase,
+            "skills": [
+                "Linux Command Line",
+                "Bash Scripting",
+                "Git & GitHub",
+                "Networking Basics",
+            ],
+            "resources": [
+                {
+                    "title": "Linux Journey",
+                    "url": "https://linuxjourney.com",
+                    "type": "course",
+                },
+                {
+                    "title": "Bash Guide for Beginners",
+                    "url": "https://tldp.org/LDP/Bash-Beginners-Guide/html/",
+                    "type": "article",
+                },
+            ],
+            "projects": [
+                "Set up a Linux VM",
+                "Create git repository with commits",
+            ],
+            "status": "not_started",
+            "notes": None,
+        }
+    )
 
     # Phase 2: Containerization
-    milestones.append({
-        "phase": 2,
-        "title": "Containerization",
-        "duration_weeks": weeks_per_phase,
-        "skills": ["Docker", "Docker Compose", "Container Orchestration Basics"],
-        "resources": [
-            {"title": "Docker Official Documentation", "url": "https://docs.docker.com", "type": "docs"},
-            {"title": "Docker Mastery", "url": "https://www.udemy.com/course/docker-mastery", "type": "course"},
-        ],
-        "projects": ["Containerize a web app", "Create multi-container app with Compose"],
-        "status": "not_started",
-        "notes": None,
-    })
+    milestones.append(
+        {
+            "phase": 2,
+            "title": "Containerization",
+            "duration_weeks": weeks_per_phase,
+            "skills": [
+                "Docker",
+                "Docker Compose",
+                "Container Orchestration Basics",
+            ],
+            "resources": [
+                {
+                    "title": "Docker Official Documentation",
+                    "url": "https://docs.docker.com",
+                    "type": "docs",
+                },
+                {
+                    "title": "Docker Mastery",
+                    "url": "https://www.udemy.com/course/docker-mastery",
+                    "type": "course",
+                },
+            ],
+            "projects": [
+                "Containerize a web app",
+                "Create multi-container app with Compose",
+            ],
+            "status": "not_started",
+            "notes": None,
+        }
+    )
 
     if num_phases >= 3:
-        milestones.append({
-            "phase": 3,
-            "title": "Continuous Integration",
-            "duration_weeks": weeks_per_phase,
-            "skills": ["CI Concepts", "GitHub Actions", "Testing", "Artifact Management"],
-            "resources": [
-                {"title": "GitHub Actions Docs", "url": "https://docs.github.com/actions", "type": "docs"},
-            ],
-            "projects": ["Build CI pipeline for Docker app", "Add automated tests"],
-            "status": "not_started",
-            "notes": None,
-        })
+        milestones.append(
+            {
+                "phase": 3,
+                "title": "Continuous Integration",
+                "duration_weeks": weeks_per_phase,
+                "skills": [
+                    "CI Concepts",
+                    "GitHub Actions",
+                    "Testing",
+                    "Artifact Management",
+                ],
+                "resources": [
+                    {
+                        "title": "GitHub Actions Docs",
+                        "url": "https://docs.github.com/actions",
+                        "type": "docs",
+                    },
+                ],
+                "projects": [
+                    "Build CI pipeline for Docker app",
+                    "Add automated tests",
+                ],
+                "status": "not_started",
+                "notes": None,
+            }
+        )
 
     if num_phases >= 4:
-        milestones.append({
-            "phase": 4,
-            "title": "Cloud Platforms",
-            "duration_weeks": weeks_per_phase,
-            "skills": ["AWS/GCP/Azure Basics", "Compute Services", "Storage", "Networking"],
-            "resources": [
-                {"title": "AWS Cloud Practitioner", "url": "https://aws.amazon.com/certification/", "type": "cert"},
-            ],
-            "projects": ["Deploy app to cloud platform", "Set up cloud storage"],
-            "status": "not_started",
-            "notes": None,
-        })
+        milestones.append(
+            {
+                "phase": 4,
+                "title": "Cloud Platforms",
+                "duration_weeks": weeks_per_phase,
+                "skills": [
+                    "AWS/GCP/Azure Basics",
+                    "Compute Services",
+                    "Storage",
+                    "Networking",
+                ],
+                "resources": [
+                    {
+                        "title": "AWS Cloud Practitioner",
+                        "url": "https://aws.amazon.com/certification/",
+                        "type": "cert",
+                    },
+                ],
+                "projects": [
+                    "Deploy app to cloud platform",
+                    "Set up cloud storage",
+                ],
+                "status": "not_started",
+                "notes": None,
+            }
+        )
 
     if num_phases >= 5:
-        milestones.append({
-            "phase": 5,
-            "title": "Infrastructure as Code",
-            "duration_weeks": weeks_per_phase,
-            "skills": ["Terraform", "Configuration Management", "Immutable Infrastructure"],
-            "resources": [
-                {"title": "Terraform Docs", "url": "https://www.terraform.io/docs", "type": "docs"},
-            ],
-            "projects": ["Provision infrastructure with Terraform", "Set up Ansible playbooks"],
-            "status": "not_started",
-            "notes": None,
-        })
+        milestones.append(
+            {
+                "phase": 5,
+                "title": "Infrastructure as Code",
+                "duration_weeks": weeks_per_phase,
+                "skills": [
+                    "Terraform",
+                    "Configuration Management",
+                    "Immutable Infrastructure",
+                ],
+                "resources": [
+                    {
+                        "title": "Terraform Docs",
+                        "url": "https://www.terraform.io/docs",
+                        "type": "docs",
+                    },
+                ],
+                "projects": [
+                    "Provision infrastructure with Terraform",
+                    "Set up Ansible playbooks",
+                ],
+                "status": "not_started",
+                "notes": None,
+            }
+        )
 
     if num_phases >= 6:
-        milestones.append({
-            "phase": 6,
-            "title": "Advanced Operations",
-            "duration_weeks": weeks_per_phase,
-            "skills": ["Kubernetes", "Monitoring & Logging", "Security", "Incident Response"],
-            "resources": [
-                {"title": "Kubernetes Documentation", "url": "https://kubernetes.io/docs", "type": "docs"},
-            ],
-            "projects": ["Deploy app to Kubernetes", "Set up monitoring stack"],
-            "status": "not_started",
-            "notes": None,
-        })
+        milestones.append(
+            {
+                "phase": 6,
+                "title": "Advanced Operations",
+                "duration_weeks": weeks_per_phase,
+                "skills": [
+                    "Kubernetes",
+                    "Monitoring & Logging",
+                    "Security",
+                    "Incident Response",
+                ],
+                "resources": [
+                    {
+                        "title": "Kubernetes Documentation",
+                        "url": "https://kubernetes.io/docs",
+                        "type": "docs",
+                    },
+                ],
+                "projects": [
+                    "Deploy app to Kubernetes",
+                    "Set up monitoring stack",
+                ],
+                "status": "not_started",
+                "notes": None,
+            }
+        )
 
     return {
         "target_role": target_role,
@@ -286,20 +384,18 @@ def _calculate_roadmap_progress(roadmap_data: dict) -> dict:
     if not milestones:
         return {"percent": 0, "completed": 0, "total": 0}
 
-    completed = sum(
-        1
-        for m in milestones
-        if m.get("status") == "completed"
-    )
+    completed = sum(1 for m in milestones if m.get("status") == "completed")
     in_progress = sum(
-        1
-        for m in milestones
-        if m.get("status") == "in_progress"
+        1 for m in milestones if m.get("status") == "in_progress"
     )
     total = len(milestones)
 
     # Weight completed as 100%, in_progress as 50%
-    percent = int(((completed * 100) + (in_progress * 50)) / total) if total > 0 else 0
+    percent = (
+        int(((completed * 100) + (in_progress * 50)) / total)
+        if total > 0
+        else 0
+    )
 
     return {
         "percent": percent,

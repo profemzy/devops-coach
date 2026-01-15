@@ -10,4 +10,4 @@ resources = Blueprint(
     template_folder="../templates",
 )
 
-from devopscoach.resources import views  # noqa: E402
+from devopscoach.resources import views as views  # noqa: E402
