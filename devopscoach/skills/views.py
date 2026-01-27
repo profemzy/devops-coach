@@ -87,7 +87,10 @@ def results(assessment_id):
     )
 
     if assessment.recommendations is None or is_pending:
-        if request.args.get("retry") == "1" or assessment.recommendations is None:
+        if (
+            request.args.get("retry") == "1"
+            or assessment.recommendations is None
+        ):
             assessment.recommendations = {"status": "pending"}
             db.session.commit()
             analyze_skills_assessment.delay(assessment.id)

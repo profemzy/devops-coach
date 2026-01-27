@@ -16,9 +16,7 @@ def analyze_skills_assessment(assessment_id: int) -> bool:
 
     try:
         ai_service = get_ai_service()
-        recommendations = ai_service.analyze_skills(
-            assessment.assessment_data
-        )
+        recommendations = ai_service.analyze_skills(assessment.assessment_data)
         assessment.recommendations = recommendations
         db.session.commit()
         return True
