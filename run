@@ -56,6 +56,7 @@ lint:shell() {
     ! -path "./.git/*" \
     ! -path "./.ruff_cache/*" \
     ! -path "./.pytest_cache/*" \
+    ! -path "./.venv/*" \
     ! -path "./assets/*" \
     ! -path "./public/*" \
     -exec grep --quiet '^#!.*sh' {} \; -exec "${cmd[@]}" {} +
@@ -82,7 +83,14 @@ format:shell() {
     fi
   done
 
-  "${cmd[@]}" "${maybe_write[@]}" "${@}" .
+  find . -type f \
+    ! -path "./.git/*" \
+    ! -path "./.ruff_cache/*" \
+    ! -path "./.pytest_cache/*" \
+    ! -path "./.venv/*" \
+    ! -path "./assets/*" \
+    ! -path "./public/*" \
+    -exec grep --quiet '^#!.*sh' {} \; -exec "${cmd[@]}" "${maybe_write[@]}" "${@}" {} +
 }
 
 format() {
