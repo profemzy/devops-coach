@@ -5,7 +5,6 @@ from flask_login import current_user, login_required
 
 from devopscoach.extensions import db
 from devopscoach.models import SkillAssessment
-from devopscoach.services.ai_service import get_ai_service
 from devopscoach.skills import skills
 from devopscoach.skills.forms import SkillsAssessmentForm
 from devopscoach.tasks.ai_tasks import analyze_skills_assessment
