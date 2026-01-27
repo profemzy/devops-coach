@@ -1,6 +1,7 @@
 """Celery tasks for AI workflows."""
 
 from celery import shared_task
+
 from devopscoach.extensions import db
 from devopscoach.models import SkillAssessment
 from devopscoach.services.ai_service import get_ai_service
