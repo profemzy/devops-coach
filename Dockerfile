@@ -15,13 +15,13 @@ RUN apt-get update \
 
 USER node
 
-COPY --chown=node:node assets/package.json assets/*yarn* ./
+COPY --chown=node:node assets/package.json assets/package-lock.json* ./
 
-RUN yarn install && yarn cache clean
+RUN npm ci && npm cache clean --force
 
 ARG NODE_ENV="production"
 ENV NODE_ENV="${NODE_ENV}" \
-  PATH="${PATH}:/node_modules/.bin" \
+  PATH="${PATH}:/app/assets/node_modules/.bin" \
   USER="node"
 
 COPY --chown=node:node . ..
@@ -70,7 +70,7 @@ CMD ["bash"]
 ###############################################################################
 
 FROM python:3.14.0-slim-trixie AS app
-LABEL maintainer="Nick Janetakis <nick.janetakis@gmail.com>"
+LABEL maintainer="Femi Oladele <femioladele@infotitans.com>"
 
 WORKDIR /app
 

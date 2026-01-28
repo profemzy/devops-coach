@@ -6,53 +6,143 @@
 <div class="min-h-screen py-8">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header with Back Button -->
-    <div class="mb-8">
+    <div class="mb-8 flex items-center justify-between">
       <a href="{{ url_for('dashboard.index') }}"
-         class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
-        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back to Dashboard
+         class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors group">
+        <div class="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center mr-3 group-hover:bg-gray-50 transition-colors">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </div>
+        <span class="font-medium">Back to Dashboard</span>
       </a>
+      <div class="flex gap-2">
+        <a href="{{ url_for('skills.assessment') }}"
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Retake
+        </a>
+        <a href="{{ url_for('skills.history') }}"
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          History
+        </a>
+      </div>
     </div>
 
     <!-- Overall Score Card -->
-    <div class="glass rounded-2xl shadow-xl p-8 mb-8 animate-scale-in">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div class="glass rounded-2xl shadow-xl p-8 mb-8 animate-scale-in relative overflow-hidden">
+      <!-- Decorative background -->
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-200/30 to-amber-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between relative z-10">
         <div class="flex-1">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Skills Analysis</h1>
-          <p class="text-gray-600">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Your Skills Analysis</h1>
+            </div>
+          </div>
+          <p class="text-gray-600 flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
             Assessment completed on {{ assessment.assessment_date.strftime('%B %d, %Y') }}
           </p>
+
+          <!-- Score interpretation -->
+          {% set score = recommendations.overall_score|default(0) %}
+          <div class="mt-4 p-4 rounded-xl {% if score >= 70 %}bg-emerald-50 border border-emerald-200{% elif score >= 40 %}bg-amber-50 border border-amber-200{% else %}bg-rose-50 border border-rose-200{% endif %}">
+            <p class="text-sm {% if score >= 70 %}text-emerald-800{% elif score >= 40 %}text-amber-800{% else %}text-rose-800{% endif %}">
+              <span class="font-semibold">Insight:</span>
+              {% if score >= 70 %}
+                You're well-positioned for DevOps roles! Focus on refining specific skills and building portfolio projects.
+              {% elif score >= 40 %}
+                You have a solid foundation. Prioritize the high-priority skills below to accelerate your transition.
+              {% else %}
+                Great start! Focus on the foundational skills and follow the learning roadmap to build up your expertise.
+              {% endif %}
+            </p>
+          </div>
         </div>
+
+        <!-- Animated Score Circle -->
         <div class="mt-6 md:mt-0 flex items-center space-x-6">
-          <!-- Score Circle -->
-          <div class="relative w-32 h-32">
-            {% set score = recommendations.overall_score %}
-            {% set readiness = recommendations.readiness_level %}
-            <svg class="w-32 h-32 transform -rotate-90">
-              <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-200" />
-              <circle cx="64" cy="64" r="56" stroke="url(#gradient)" stroke-width="8" fill="transparent"
-                      stroke-dasharray="{{ 351.8 * score|default(0) / 100 }} 351.8"
-                      stroke-linecap="round" />
+          <div class="relative w-36 h-36">
+            {% set score = recommendations.overall_score|default(0) %}
+            {% set readiness = recommendations.readiness_level|default('beginner') %}
+
+            <!-- Background circle -->
+            <svg class="w-36 h-36 transform -rotate-90">
+              <circle cx="72" cy="72" r="64" stroke="currentColor" stroke-width="10" fill="transparent" class="text-gray-100" />
+
+              <!-- Progress circle with animation -->
+              <circle cx="72" cy="72" r="64" stroke="url(#scoreGradient)" stroke-width="10" fill="transparent"
+                      stroke-dasharray="402.12"
+                      stroke-dashoffset="402.12"
+                      stroke-linecap="round"
+                      class="transition-all duration-1000 ease-out"
+                      id="score-circle"
+                      data-score="{{ score }}" />
+
               <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" class="text-emerald-500" stop-color="currentColor" />
-                  <stop offset="100%" class="text-amber-500" stop-color="currentColor" />
+                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  {% if score >= 70 %}
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="100%" stop-color="#34d399" />
+                  {% elif score >= 40 %}
+                    <stop offset="0%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#fbbf24" />
+                  {% else %}
+                    <stop offset="0%" stop-color="#f43f5e" />
+                    <stop offset="100%" stop-color="#fb7185" />
+                  {% endif %}
                 </linearGradient>
               </defs>
             </svg>
+
+            <!-- Score text -->
             <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span class="text-3xl font-bold text-gray-900">{{ score }}</span>
-              <span class="text-xs text-gray-500 uppercase">Score</span>
+              <span class="text-4xl font-bold text-gray-900" id="score-number" data-score="{{ score }}">0</span>
+              <span class="text-xs text-gray-500 uppercase font-medium">Score</span>
             </div>
+
+            <!-- Decorative ring -->
+            <div class="absolute inset-0 rounded-full border-4 border-transparent"></div>
           </div>
-          <div>
-            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold
-              {% if readiness == 'beginner' %}bg-red-100 text-red-800
-              {% elif readiness == 'intermediate' %}bg-yellow-100 text-yellow-800
-              {% elif readiness == 'advanced' %}bg-green-100 text-green-800
-              {% else %}bg-emerald-100 text-emerald-800{% endif %}">
+
+          <!-- Readiness Badge -->
+          <div class="text-center">
+            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold shadow-lg
+              {% if readiness == 'beginner' %}bg-rose-100 text-rose-800 shadow-rose-200
+              {% elif readiness == 'intermediate' %}bg-amber-100 text-amber-800 shadow-amber-200
+              {% elif readiness == 'advanced' %}bg-emerald-100 text-emerald-800 shadow-emerald-200
+              {% else %}bg-purple-100 text-purple-800 shadow-purple-200{% endif %}">
+              {% if readiness == 'beginner' %}
+                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              {% elif readiness == 'intermediate' %}
+                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              {% elif readiness == 'advanced' %}
+                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              {% else %}
+                <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              {% endif %}
               {{ readiness|title }} Readiness
             </span>
           </div>
@@ -64,42 +154,46 @@
       <!-- Left Column -->
       <div class="lg:col-span-2 space-y-8">
         <!-- Strengths -->
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
             Your Strengths
           </h2>
-          <ul class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {% for strength in recommendations.strengths %}
-            <li class="flex items-start">
-              <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
-              <span class="text-gray-700">{{ strength }}</span>
-            </li>
+            <div class="flex items-start p-3 rounded-xl bg-green-50/50 border border-green-100 hover:bg-green-50 transition-colors">
+              <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <span class="ml-3 text-gray-700 text-sm font-medium">{{ strength }}</span>
+            </div>
             {% endfor %}
-          </ul>
+          </div>
         </div>
 
         <!-- Recommended Roles -->
         {% if recommendations.recommended_roles %}
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 01-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 01-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-            </svg>
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
             Recommended DevOps Roles
           </h2>
-          <p class="text-gray-600 mb-4">Based on your background and skills, we recommend these DevOps career paths:</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <p class="text-gray-600 mb-4 text-sm">Based on your background and skills, we recommend these DevOps career paths:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {% for role in recommendations.recommended_roles %}
-            <div class="flex items-start">
-              <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-emerald-500 to-amber-500 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+            <div class="flex items-center p-4 bg-gradient-to-r from-white to-gray-50 rounded-xl border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all group cursor-default">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-amber-500 rounded-lg flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                <span class="text-white font-bold text-sm">{{ loop.index }}</span>
               </div>
               <div class="ml-3">
                 <p class="font-semibold text-gray-900">{{ role }}</p>
@@ -110,68 +204,94 @@
         </div>
         {% endif %}
 
-        <!-- Skill Gaps -->
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <!-- Skill Gaps with Visual Bars -->
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+            <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
             Skills to Develop
           </h2>
-          <div class="space-y-3">
+          <div class="space-y-4">
             {% for gap in recommendations.skill_gaps %}
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-              <div class="flex-1">
-                <p class="font-medium text-gray-900">{{ gap.skill }}</p>
+            <div class="group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-gray-900">{{ gap.skill }}</span>
+                <span class="px-3 py-1 text-xs font-bold rounded-full
+                  {% if gap.priority == 'high' %}bg-rose-100 text-rose-700 border border-rose-200
+                  {% elif gap.priority == 'medium' %}bg-amber-100 text-amber-700 border border-amber-200
+                  {% else %}bg-green-100 text-green-700 border border-green-200{% endif %}">
+                  {{ gap.priority|title }} Priority
+                </span>
               </div>
-              <span class="ml-4 px-3 py-1 text-xs font-semibold rounded-full
-                {% if gap.priority == 'high' %}bg-red-100 text-red-800
-                {% elif gap.priority == 'medium' %}bg-yellow-100 text-yellow-800
-                {% else %}bg-green-100 text-green-800{% endif %}">
-                {{ gap.priority|title }} Priority
-              </span>
+              <!-- Priority progress bar -->
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-700 ease-out skill-gap-bar
+                  {% if gap.priority == 'high' %}bg-gradient-to-r from-rose-500 to-rose-400 w-[90%]
+                  {% elif gap.priority == 'medium' %}bg-gradient-to-r from-amber-500 to-amber-400 w-[60%]
+                  {% else %}bg-gradient-to-r from-green-500 to-green-400 w-[30%]{% endif %}"
+                  style="width: 0%"
+                  data-width="{% if gap.priority == 'high' %}90{% elif gap.priority == 'medium' %}60{% else %}30{% endif %}">
+                </div>
+              </div>
             </div>
             {% endfor %}
           </div>
         </div>
 
-        <!-- Learning Roadmap -->
-        <div class="glass rounded-2xl shadow-xl p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
+        <!-- Learning Roadmap - Enhanced Timeline -->
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
+          <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
             Your Learning Roadmap
           </h2>
-          <div class="space-y-6">
-            {% for phase in recommendations.recommended_roadmap %}
-            <div class="relative">
-              <div class="flex items-start">
-                <div class="flex-shrink-0 flex flex-col items-center">
-                  <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold">
-                    {{ phase.phase }}
-                  </div>
-                  {% if not loop.last %}<div class="w-0.5 h-full bg-gray-200 my-2"></div>{% endif %}
+          <div class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-400 via-amber-400 to-rose-400"></div>
+
+            <div class="space-y-6">
+              {% for phase in recommendations.recommended_roadmap %}
+              <div class="relative flex items-start group">
+                <!-- Phase number badge -->
+                <div class="relative z-10 flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-110 transition-transform">
+                  {{ phase.phase }}
                 </div>
-                <div class="ml-4 flex-1 pb-6">
-                  <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-semibold text-gray-900">{{ phase.title }}</h3>
-                    <span class="text-sm text-gray-500">{{ phase.duration }}</span>
+
+                <!-- Content card -->
+                <div class="ml-6 flex-1 bg-white/70 rounded-xl p-4 border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all">
+                  <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-gray-900 text-lg">{{ phase.title }}</h3>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                      <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {{ phase.duration }}
+                    </span>
                   </div>
-                  <div class="mb-3">
-                    <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Skills</p>
+
+                  <!-- Skills tags -->
+                  <div class="mb-4">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Skills to Learn</p>
                     <div class="flex flex-wrap gap-2">
                       {% for skill in phase.skills %}
-                      <span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full">{{ skill }}</span>
+                      <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-100">{{ skill }}</span>
                       {% endfor %}
                     </div>
                   </div>
+
+                  <!-- Resources -->
                   <div>
-                    <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Resources</p>
-                    <ul class="text-sm text-gray-600 space-y-1">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Recommended Resources</p>
+                    <ul class="space-y-2">
                       {% for resource in phase.resources %}
-                      <li class="flex items-start">
-                        <svg class="w-4 h-4 mr-2 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <li class="flex items-start text-sm text-gray-600">
+                        <svg class="w-4 h-4 mr-2 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                         {{ resource }}
@@ -181,8 +301,8 @@
                   </div>
                 </div>
               </div>
+              {% endfor %}
             </div>
-            {% endfor %}
           </div>
         </div>
       </div>
@@ -190,60 +310,64 @@
       <!-- Right Column -->
       <div class="space-y-8">
         <!-- Certifications -->
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-            </svg>
-            Recommended Certifications
+            <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center mr-2">
+              <svg class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            Certifications
           </h2>
-          <ul class="space-y-3">
+          <div class="space-y-3">
             {% for cert in recommendations.certifications %}
-            <li class="flex items-start">
-              <div class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg class="w-4 h-4 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
+            <div class="flex items-start p-3 rounded-xl bg-gradient-to-r from-amber-50 to-white border border-amber-100 hover:border-amber-300 transition-colors group">
+              <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
+                <span class="text-white text-xs font-bold">{{ loop.index }}</span>
               </div>
-              <span class="ml-3 text-sm text-gray-700">{{ cert }}</span>
-            </li>
+              <span class="ml-3 text-sm text-gray-700 font-medium">{{ cert }}</span>
+            </div>
             {% endfor %}
-          </ul>
+          </div>
         </div>
 
         <!-- Projects -->
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            Hands-on Projects
+            <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center mr-2">
+              <svg class="w-4 h-4 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            Portfolio Projects
           </h2>
           <div class="space-y-4">
             {% for project in recommendations.projects %}
             {% if project is mapping %}
-            <div class="bg-gray-50 rounded-xl p-4">
+            <div class="bg-white rounded-xl p-4 border border-gray-100 hover:border-sky-300 hover:shadow-md transition-all group">
               <div class="flex items-start justify-between mb-2">
-                <h4 class="font-semibold text-gray-900">{{ project.title }}</h4>
+                <h4 class="font-semibold text-gray-900 group-hover:text-sky-700 transition-colors">{{ project.title }}</h4>
                 {% if project.get('level') %}
-                <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full
-                  {% if project.level == 'Beginner' %}bg-green-100 text-green-800
-                  {% elif project.level == 'Intermediate' %}bg-yellow-100 text-yellow-800
-                  {% elif project.level == 'Advanced' %}bg-red-100 text-red-800
-                  {% else %}bg-gray-100 text-gray-800{% endif %}">
+                <span class="ml-2 px-2 py-0.5 text-xs font-bold rounded-full
+                  {% if project.level == 'Beginner' %}bg-green-100 text-green-700 border border-green-200
+                  {% elif project.level == 'Intermediate' %}bg-amber-100 text-amber-700 border border-amber-200
+                  {% elif project.level == 'Advanced' %}bg-rose-100 text-rose-700 border border-rose-200
+                  {% else %}bg-gray-100 text-gray-700 border border-gray-200{% endif %}">
                   {{ project.level }}
                 </span>
                 {% endif %}
               </div>
               <p class="text-sm text-gray-600 mb-2">{{ project.description }}</p>
               {% if project.get('outcome') %}
-              <p class="text-xs text-gray-500"><strong>Outcome:</strong> {{ project.outcome }}</p>
+              <div class="mt-3 p-2 bg-sky-50 rounded-lg">
+                <p class="text-xs text-sky-800"><span class="font-semibold">Outcome:</span> {{ project.outcome }}</p>
+              </div>
               {% endif %}
             </div>
             {% else %}
-            <div class="flex items-start">
-              <div class="w-6 h-6 rounded-full bg-sky-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg class="w-4 h-4 text-sky-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="flex items-start p-3 rounded-xl bg-sky-50 border border-sky-100">
+              <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
@@ -255,41 +379,52 @@
         </div>
 
         <!-- Next Steps -->
-        <div class="glass rounded-2xl shadow-xl p-6">
+        <div class="glass rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow">
           <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center mr-2">
+              <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
             Immediate Next Steps
           </h2>
-          <ul class="space-y-3">
+          <div class="space-y-3">
             {% for step in recommendations.next_steps %}
-            <li class="flex items-start">
-              <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span class="w-4 h-4 text-green-600 text-xs font-bold">{{ loop.index }}</span>
+            <div class="flex items-start group">
+              <div class="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white text-xs font-bold shadow-md group-hover:scale-110 transition-transform">
+                {{ loop.index }}
               </div>
               <span class="ml-3 text-sm text-gray-700">{{ step }}</span>
-            </li>
+            </div>
             {% endfor %}
-          </ul>
+          </div>
         </div>
 
         {% if recommendations.get('fallback_note') %}
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <p class="text-xs text-amber-800">
-            <strong>Note:</strong> {{ recommendations.fallback_note }}
-          </p>
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="ml-3 text-xs text-amber-800">
+              <strong>Note:</strong> {{ recommendations.fallback_note }}
+            </p>
+          </div>
         </div>
         {% endif %}
       </div>
     </div>
 
     <!-- Progressive Journey CTA -->
-    <div class="mt-8 rounded-2xl shadow-xl p-8 bg-gradient-to-r from-emerald-600 via-emerald-500 to-amber-500 text-white border border-white/20">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="mt-8 rounded-2xl shadow-xl p-8 bg-gradient-to-r from-emerald-600 via-emerald-500 to-amber-500 text-white border border-white/20 relative overflow-hidden">
+      <!-- Decorative elements -->
+      <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div class="flex-1">
           <div class="flex items-center space-x-3 mb-3">
-            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
               <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
@@ -315,9 +450,9 @@
       </div>
 
       <!-- Progress indicator -->
-      <div class="mt-6 flex items-center justify-center space-x-4 text-sm">
+      <div class="mt-6 flex items-center justify-center space-x-4 text-sm relative z-10">
         <div class="flex items-center">
-          <div class="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center mr-2">
+          <div class="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center mr-2 ring-2 ring-white/50">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
             </svg>
@@ -326,7 +461,7 @@
         </div>
         <div class="flex-1 h-0.5 bg-white/30 max-w-16"></div>
         <div class="flex items-center">
-          <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-2 shadow-lg">
+          <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-2 shadow-lg ring-2 ring-white/50">
             <span class="text-emerald-700 font-bold">2</span>
           </div>
           <span class="font-bold">Learning Roadmap</span>
@@ -340,24 +475,51 @@
         </div>
       </div>
     </div>
-
-    <!-- Secondary Actions -->
-    <div class="mt-6 flex flex-wrap gap-4 justify-center">
-      <a href="{{ url_for('skills.assessment') }}"
-         class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-200">
-        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
-        Retake Assessment
-      </a>
-      <a href="{{ url_for('skills.history') }}"
-         class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-200">
-        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        View History
-      </a>
-    </div>
   </div>
 </div>
+
+<script>
+  // Animate score circle on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const scoreCircle = document.getElementById('score-circle');
+    const scoreNumber = document.getElementById('score-number');
+    const skillGapBars = document.querySelectorAll('.skill-gap-bar');
+
+    if (scoreCircle && scoreNumber) {
+      const targetScore = parseInt(scoreNumber.dataset.score) || 0;
+      const circumference = 2 * Math.PI * 64; // r=64
+
+      // Animate circle
+      setTimeout(() => {
+        const offset = circumference - (targetScore / 100) * circumference;
+        scoreCircle.style.strokeDashoffset = offset;
+      }, 300);
+
+      // Animate number counting
+      let currentScore = 0;
+      const duration = 1000;
+      const increment = targetScore / (duration / 16);
+
+      const animateNumber = () => {
+        currentScore += increment;
+        if (currentScore < targetScore) {
+          scoreNumber.textContent = Math.round(currentScore);
+          requestAnimationFrame(animateNumber);
+        } else {
+          scoreNumber.textContent = targetScore;
+        }
+      };
+
+      setTimeout(animateNumber, 300);
+    }
+
+    // Animate skill gap bars
+    skillGapBars.forEach((bar, index) => {
+      setTimeout(() => {
+        const targetWidth = bar.dataset.width + '%';
+        bar.style.width = targetWidth;
+      }, 500 + (index * 100));
+    });
+  });
+</script>
 {% endblock %}
