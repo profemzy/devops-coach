@@ -1,10 +1,6 @@
 # =============================================================================
 # WackOps-Coach Infrastructure - Main Terraform Configuration
 # =============================================================================
-# This file contains all infrastructure components for the WackOps-Coach
-# application running on Azure Kubernetes Service (AKS)
-# Using Azure Verified Modules (AVM) for all resources
-# =============================================================================
 
 terraform {
   required_version = ">= 1.10.0"
@@ -43,7 +39,7 @@ provider "azurerm" {
 # Local Values
 # =============================================================================
 locals {
-  project_name    = "wackops-coach"
+  project_name    = "wackopscoach"
   environment     = var.environment
   location        = var.location
   resource_prefix = "${local.project_name}-${local.environment}"
@@ -67,7 +63,7 @@ resource "azurerm_resource_group" "main" {
 }
 
 # =============================================================================
-# Virtual Network and Subnets (Inlined from custom module)
+# Virtual Network and Subnets
 # =============================================================================
 resource "azurerm_virtual_network" "main" {
   name                = "${local.resource_prefix}-vnet"
@@ -82,29 +78,6 @@ resource "azurerm_subnet" "aks" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [var.subnet_aks_prefix]
-
-  delegation {
-    name = "aks-delegation"
-    service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
-}
-
-resource "azurerm_subnet" "aci" {
-  name                 = "aci-subnet"
-  resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.subnet_aci_prefix]
-
-  delegation {
-    name = "aci-delegation"
-    service_delegation {
-      name    = "Microsoft.ContainerInstance/containerGroups"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
 }
 
 resource "azurerm_network_security_group" "aks" {
@@ -113,20 +86,8 @@ resource "azurerm_network_security_group" "aks" {
   resource_group_name = azurerm_resource_group.main.name
 
   security_rule {
-    name                       = "AllowAzureLoadBalancer"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "AzureLoadBalancer"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
     name                       = "AllowHTTP"
-    priority                   = 110
+    priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -138,7 +99,7 @@ resource "azurerm_network_security_group" "aks" {
 
   security_rule {
     name                       = "AllowHTTPS"
-    priority                   = 120
+    priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -157,26 +118,22 @@ resource "azurerm_subnet_network_security_group_association" "aks" {
 }
 
 # =============================================================================
-# Azure Container Registry (ACR) - Azure Verified Module v0.1.0
+# Azure Container Registry (ACR) - Azure Verified Module v0.5.1
 # =============================================================================
 module "acr" {
   source  = "Azure/avm-res-containerregistry-registry/azurerm"
   version = "0.5.1"
 
-  name                = "${local.project_name}${local.environment}acr"
+  name                = "${local.project_name}${var.environment}acr"
   resource_group_name = azurerm_resource_group.main.name
   location            = local.location
 
   sku             = var.acr_sku
   admin_enabled   = false
-  zone_redundancy_enabled = var.acr_sku == "Premium" ? true : false
+  zone_redundancy_enabled = var.acr_sku == "Premium"
 
-  trust_policy_enabled = var.acr_sku == "Premium"
-
-  retention_policy = {
-    days    = var.acr_sku == "Premium" ? 30 : 7
-    enabled = true
-  }
+  enable_trust_policy = var.acr_sku == "Premium"
+  retention_policy_in_days = var.acr_sku == "Premium" ? 30 : 7
 
   public_network_access_enabled = true
 
@@ -193,40 +150,53 @@ module "aks" {
   resource_group_name = azurerm_resource_group.main.name
   location            = local.location
 
-  cluster_name        = "${local.resource_prefix}-aks"
-  prefix              = local.project_name
+  prefix = local.project_name
+  cluster_name = "${local.resource_prefix}-aks"
 
-  kubernetes_version   = var.kubernetes_version
-  orchestrator_version = var.kubernetes_version
-  sku_tier             = var.environment == "prod" ? "Standard" : "Free"
+  kubernetes_version        = var.kubernetes_version
+  automatic_channel_upgrade = null
+  sku_tier                  = var.environment == "prod" ? "Standard" : "Free"
 
   # System node pool
-  agents_pool_name    = "system"
-  agents_count        = var.aks_node_count
-  agents_size         = var.aks_node_vm_size
-  agents_min_count    = var.aks_min_node_count
-  agents_max_count    = var.aks_max_node_count
-  enable_auto_scaling = var.aks_enable_auto_scaling
+  agents_pool_name = "system"
+  agents_count     = var.aks_node_count
+  agents_size      = var.aks_node_vm_size
+  agents_min_count = var.aks_min_node_count
+  agents_max_count = var.aks_max_node_count
+  auto_scaling_enabled = var.aks_enable_auto_scaling
 
-  vnet_subnet_id = azurerm_subnet.aks.id
+  # Networking
+  vnet_subnet = {
+    id = azurerm_subnet.aks.id
+  }
 
-  network_plugin  = "azure"
-  network_policy  = "calico"
-  load_balancer_sku = "standard"
+  network_plugin = "azure"
+  network_policy = "calico"
 
+  # OIDC and Workload Identity
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
 
-  rbac_aad_managed = true
-  rbac_aad_admin_group_object_ids = var.aks_admin_group_ids
+  # RBAC
+  role_based_access_control_enabled = true
+  rbac_aad_azure_rbac_enabled       = true
+  rbac_aad_admin_group_object_ids   = var.aks_admin_group_ids
 
+  # ACR attachment
   attached_acr_id_map = {
     main = module.acr.resource_id
   }
 
+  # Monitoring
   log_analytics_workspace_enabled = var.log_analytics_workspace_id != null
-  log_analytics_workspace_id      = var.log_analytics_workspace_id
+  log_analytics_workspace = var.log_analytics_workspace_id != null ? {
+    id                  = var.log_analytics_workspace_id
+    name                = "${local.resource_prefix}-law"
+    location            = local.location
+    resource_group_name = azurerm_resource_group.main.name
+  } : null
 
+  # Maintenance window for production
   maintenance_window = var.environment == "prod" ? {
     allowed = [{
       day   = "Saturday"
@@ -236,10 +206,12 @@ module "aks" {
   } : null
 
   tags = local.common_tags
+
+  depends_on = [azurerm_subnet_network_security_group_association.aks]
 }
 
 # =============================================================================
-# Azure Key Vault - Azure Verified Module v0.9.1
+# Azure Key Vault - Azure Verified Module v0.10.2
 # =============================================================================
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
@@ -255,7 +227,6 @@ module "keyvault" {
 
   soft_delete_retention_days = 7
   purge_protection_enabled   = var.environment == "prod"
-  enable_rbac_authorization  = true
 
   public_network_access_enabled = true
 
@@ -264,12 +235,14 @@ module "keyvault" {
 
 data "azurerm_client_config" "current" {}
 
+# Grant AKS managed identity access to Key Vault
 resource "azurerm_role_assignment" "aks_keyvault_reader" {
   scope                = module.keyvault.resource_id
   role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.aks.identity.principal_id
+  principal_id         = module.aks.cluster_identity.object_id
 }
 
+# Grant current user admin access to Key Vault
 resource "azurerm_role_assignment" "current_user_keyvault_admin" {
   scope                = module.keyvault.resource_id
   role_definition_name = "Key Vault Administrator"
@@ -277,31 +250,11 @@ resource "azurerm_role_assignment" "current_user_keyvault_admin" {
 }
 
 # =============================================================================
-# Azure DNS - Inlined (using existing zone)
+# Azure DNS
 # =============================================================================
 data "azurerm_dns_zone" "existing" {
   name                = var.dns_zone_name
   resource_group_name = var.dns_resource_group_name
-}
-
-resource "azurerm_dns_a_record" "root" {
-  count               = var.create_dns_records ? 1 : 0
-  name                = "@"
-  zone_name           = data.azurerm_dns_zone.existing.name
-  resource_group_name = var.dns_resource_group_name
-  ttl                 = 300
-  records             = [module.aks.ingress_application_gateway[0].public_ip_address]
-  tags                = local.common_tags
-}
-
-resource "azurerm_dns_a_record" "www" {
-  count               = var.create_dns_records ? 1 : 0
-  name                = "www"
-  zone_name           = data.azurerm_dns_zone.existing.name
-  resource_group_name = var.dns_resource_group_name
-  ttl                 = 300
-  records             = [module.aks.ingress_application_gateway[0].public_ip_address]
-  tags                = local.common_tags
 }
 
 # =============================================================================
@@ -324,7 +277,7 @@ output "aks_subnet_id" {
 
 output "acr_login_server" {
   description = "Login server for ACR"
-  value       = module.acr.login_server
+  value       = module.acr.resource.login_server
 }
 
 output "acr_name" {
@@ -339,7 +292,7 @@ output "aks_cluster_name" {
 
 output "aks_cluster_fqdn" {
   description = "FQDN of the AKS cluster"
-  value       = module.aks.fqdn
+  value       = module.aks.cluster_fqdn
 }
 
 output "keyvault_name" {
@@ -350,11 +303,6 @@ output "keyvault_name" {
 output "keyvault_uri" {
   description = "URI of the Key Vault"
   value       = module.keyvault.uri
-}
-
-output "dns_zone_name" {
-  description = "Name of the DNS zone"
-  value       = data.azurerm_dns_zone.existing.name
 }
 
 output "kube_config_raw" {

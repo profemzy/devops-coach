@@ -236,3 +236,9 @@ flycheck_*.el
 
 # network security
 /network-security.data
+
+# Terraform
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate*
+infrastructure/terraform/*.tfplan
+
