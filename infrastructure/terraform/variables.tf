@@ -61,14 +61,9 @@ variable "acr_sku" {
 # AKS Variables
 # =============================================================================
 variable "kubernetes_version" {
-  description = "Kubernetes version for AKS (1.29, 1.30, 1.31)"
+  description = "Kubernetes version for AKS"
   type        = string
-  default     = "1.30"
-
-  validation {
-    condition     = contains(["1.29", "1.30", "1.31"], var.kubernetes_version)
-    error_message = "Kubernetes version must be 1.29, 1.30, or 1.31."
-  }
+  default     = "1.33.5"
 }
 
 variable "aks_node_count" {
