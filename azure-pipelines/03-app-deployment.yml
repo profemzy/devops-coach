@@ -27,7 +27,8 @@ pr:
 
 variables:
   # Container Registry
-  acrLoginServer: "wackopscoachprodacr.azurecr.io"
+  acrLoginServer: "wackopscoachdevacr.azurecr.io"
+  acrLoginServerProd: "wackopscoachprodacr.azurecr.io"
   acrServiceConnection: "wackops-acr-connection"
   
   # Kubernetes
@@ -114,8 +115,8 @@ stages:
                     action: "deploy"
                     connectionType: "azureResourceManager"
                     azureSubscriptionEndpoint: $(aksServiceConnection)
-                    azureResourceGroup: "wackops-coach-dev-rg"
-                    kubernetesCluster: "wackops-coach-dev-aks"
+                    azureResourceGroup: "wackopscoach-dev-rg"
+                    kubernetesCluster: "wackopscoach-dev-aks"
                     namespace: "wackops-coach"
                     manifests: |
                       $(Pipeline.Workspace)/kubernetes-manifests/namespace.yaml
@@ -178,8 +179,8 @@ stages:
                     action: "deploy"
                     connectionType: "azureResourceManager"
                     azureSubscriptionEndpoint: $(aksServiceConnection)
-                    azureResourceGroup: "wackops-coach-prod-rg"
-                    kubernetesCluster: "wackops-coach-prod-aks"
+                    azureResourceGroup: "wackopscoach-prod-rg"
+                    kubernetesCluster: "wackopscoach-prod-aks"
                     namespace: "wackops-coach"
                     manifests: |
                       $(Pipeline.Workspace)/kubernetes-manifests/namespace.yaml
