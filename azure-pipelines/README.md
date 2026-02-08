@@ -1,14 +1,16 @@
 # Azure DevOps Pipelines for WackOps-Coach
 
-This directory contains Azure DevOps pipeline configurations for deploying the WackOps-Coach infrastructure and application.
+This directory contains Azure DevOps pipeline configurations for deploying the WackOps-Coach **application**.
+
+> **Note:** Infrastructure pipelines (Terraform for AKS, ACR, Key Vault) are located in the [infotitans-azure](https://github.com/profemzy/infotitans-azure) repository under `terraform/wackops-coach/`.
 
 ## Overview
 
-| Pipeline | Purpose | File |
-|----------|---------|------|
-| **01-infrastructure-ci** | Validate Terraform code, plan all environments | `01-infrastructure-ci.yml` |
-| **02-infrastructure-cd** | Deploy infrastructure to DEV/PROD with approvals | `02-infrastructure-cd.yml` |
-| **03-app-deployment** | Build Docker image, deploy to AKS (DEV → PROD) | `03-app-deployment.yml` |
+| Pipeline | Purpose | File | Repository |
+|----------|---------|------|------------|
+| **01-infrastructure-ci** | Validate Terraform code, plan all environments | `01-infrastructure-ci.yml` | [infotitans-azure](https://github.com/profemzy/infotitans-azure) |
+| **02-infrastructure-cd** | Deploy infrastructure to DEV/PROD with approvals | `02-infrastructure-cd.yml` | [infotitans-azure](https://github.com/profemzy/infotitans-azure) |
+| **03-app-deployment** | Build Docker image, deploy to AKS (DEV → PROD) | `03-app-deployment.yml` | This repo |
 
 ## Prerequisites
 
@@ -18,23 +20,13 @@ This directory contains Azure DevOps pipeline configurations for deploying the W
 
 ### 2. Service Connections
 
-#### Azure Resource Manager (OIDC - Recommended)
-1. Go to **Project Settings** → **Service Connections**
-2. Click **New Service Connection** → **Azure Resource Manager**
-3. Select **Workload Identity Federation (automatic)**
-4. Enter:
-   - **Subscription**: Your Azure subscription
-   - **Resource Group**: (optional, leave empty for all)
-   - **Service Connection Name**: `terraformiacdevops1`
-5. Click **Save**
-
 #### Azure Container Registry
 1. Go to **Project Settings** → **Service Connections**
 2. Click **New Service Connection** → **Docker Registry**
 3. Select **Azure Container Registry**
 4. Enter:
    - **Subscription**: Your Azure subscription
-   - **Azure Container Registry**: Select or enter your ACR name
+   - **Azure Container Registry**: `wackopscoachdevacr` (dev) or `wackopscoachprodacr` (prod)
    - **Service Connection Name**: `wackops-acr-connection`
 5. Click **Save**
 
@@ -44,92 +36,22 @@ This directory contains Azure DevOps pipeline configurations for deploying the W
 3. Select **Azure Subscription**
 4. Enter:
    - **Subscription**: Your Azure subscription
-   - **Cluster Name**: Select your AKS cluster
+   - **Cluster Name**: `wackopscoach-dev-aks` or `wackopscoach-prod-aks`
    - **Namespace**: `wackops-coach`
    - **Service Connection Name**: `wackops-aks-connection`
 5. Click **Save**
 
-### 3. Storage Account for Terraform State
-
-```bash
-# Create Resource Group for Terraform state
-az group create --name terraform-storage-rg --location centralus
-
-# Create Storage Account
-az storage account create \
-  --name terraformstatewakopsaks \
-  --resource-group terraform-storage-rg \
-  --location centralus \
-  --sku Standard_LRS \
-  --kind StorageV2
-
-# Create Container
-az storage container create \
-  --name tfstatefiles \
-  --account-name terraformstatewakopsaks
-```
-
-### 4. Environments and Approvals
-
-Create environments for deployment approvals:
-
-1. Go to **Pipelines** → **Environments**
-2. Create the following environments:
-   - `dev` - No approval required
-   - `prod` - Requires approval
-
-3. For **prod** environment:
-   - Click on `prod` → **Approvals and checks**
-   - Click **Approvals**
-   - Add approvers (users/groups)
-   - Set **Timeout**: 30 days
-   - Click **Create**
-
 ## Pipeline Setup
 
-### Step 1: Infrastructure CI Pipeline
+### App Deployment Pipeline
 
 1. Go to **Pipelines** → **New Pipeline**
 2. Select **GitHub** → Select `profemzy/devops-coach` repository
-3. Select **Existing Azure Pipelines YAML file**
-4. Path: `/azure-pipelines/01-infrastructure-ci.yml`
-5. Click **Save** (don't run yet)
-6. Rename to: `01-Infrastructure-CI`
-
-### Step 2: Infrastructure CD Pipeline
-
-1. Go to **Pipelines** → **New Pipeline**
-2. Select **GitHub** → Select repository
-3. Path: `/azure-pipelines/02-infrastructure-cd.yml`
-4. Click **Save**
-5. Rename to: `02-Infrastructure-CD`
-
-### Step 3: App Deployment Pipeline
-
-1. Go to **Pipelines** → **New Pipeline**
-2. Select **GitHub** → Select repository
 3. Path: `/azure-pipelines/03-app-deployment.yml`
 4. Click **Save**
 5. Rename to: `03-App-Deployment`
 
 ## Usage
-
-### Deploy Infrastructure
-
-Infrastructure deployment is triggered automatically when changes are pushed to `infrastructure/` folder:
-
-```bash
-# Push changes to infrastructure
-git add infrastructure/
-git commit -m "Update AKS configuration"
-git push origin master
-```
-
-**Flow:**
-1. CI Pipeline runs (validate, plan all environments)
-2. CD Pipeline triggers automatically
-3. DEV environment deploys automatically
-4. PROD environment waits for approval
 
 ### Deploy Application
 
@@ -151,53 +73,12 @@ git push origin master
 
 To deploy manually (e.g., hotfix):
 
-1. Go to **Pipelines** → Select pipeline
+1. Go to **Pipelines** → Select `03-App-Deployment`
 2. Click **Run pipeline**
 3. Select branch
-4. For infrastructure: Select environments to deploy
-5. Click **Run**
-
-## Pipeline Variables
-
-### Common Variables (Set in Pipeline Settings)
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `tf_version` | Terraform version | `1.10.0` |
-| `azureServiceConnection` | Azure service connection name | `terraformiacdevops1` |
-| `backendResourceGroup` | Terraform state resource group | `terraform-storage-rg` |
-| `backendStorageAccount` | Terraform state storage account | `terraformstatewakopsaks` |
-| `backendContainerName` | Terraform state container | `tfstatefiles` |
-| `acrLoginServer` | ACR login server | `wackopscoachprodacr.azurecr.io` |
-
-### Setting Pipeline Variables
-
-1. Go to **Pipelines** → Select pipeline
-2. Click **Edit** → **Variables**
-3. Add or modify variables
-4. Mark sensitive variables as **Secret**
+4. Click **Run**
 
 ## Architecture
-
-### Infrastructure Deployment
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Push to       │────▶│   CI Pipeline   │────▶│   CD Pipeline   │
-│   infrastructure│     │   - Validate    │     │   - DEV Auto    │
-│                 │     │   - Plan        │     │   - PROD Approve│
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                         │
-                    ┌────────────────────────────────────┼────┐
-                    ▼                                    ▼    ▼
-            ┌──────────────┐                      ┌──────────────┐
-            │   DEV AKS    │                      │   PROD AKS   │
-            │   + ACR      │                      │   + ACR      │
-            │   + KeyVault │                      │   + KeyVault │
-            └──────────────┘                      └──────────────┘
-```
-
-### Application Deployment
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
@@ -214,24 +95,26 @@ To deploy manually (e.g., hotfix):
                                                └─────────────────┘
 ```
 
+## Resources Created by Infrastructure (infotitans-azure)
+
+| Resource | DEV | PROD |
+|----------|-----|------|
+| **Resource Group** | wackopscoach-dev-rg | wackopscoach-prod-rg |
+| **AKS Cluster** | wackopscoach-dev-aks | wackopscoach-prod-aks |
+| **ACR** | wackopscoachdevacr | wackopscoachprodacr |
+| **Key Vault** | wackopscoach-dev-kv | wackopscoach-prod-kv |
+| **VNet** | wackopscoach-dev-vnet | wackopscoach-prod-vnet |
+
+## Admin Access
+
+The AKS clusters are configured with the following admin group:
+
+- **Group**: `wackops-prod-cluster-administrators`
+- **Object ID**: `78d4fae8-1c98-49c4-9d39-d6eb84b35121`
+
+Members of this group have cluster-admin access to both DEV and PROD AKS clusters.
+
 ## Troubleshooting
-
-### Terraform State Lock
-
-If a deployment fails and state is locked:
-
-```bash
-# Get storage account key
-az storage account keys list \
-  --account-name terraformstatewakopsaks \
-  --query '[0].value' -o tsv
-
-# Remove lock
-az storage blob lease break \
-  --blob-name dev-terraform.tfstate \
-  --container-name tfstatefiles \
-  --account-name terraformstatewakopsaks
-```
 
 ### Pipeline Failures
 
@@ -239,28 +122,24 @@ Check the following:
 1. Service connections are valid and not expired
 2. Azure subscription has sufficient permissions
 3. Resource quotas are not exceeded
-4. Terraform state storage is accessible
+4. AKS cluster is healthy
 
 ### Rollback
 
-For infrastructure rollback:
+For application rollback:
 1. Go to previous pipeline run
 2. Click **Run new** with previous commit
-3. For application: Re-run previous successful deployment
+3. Or re-run previous successful deployment
 
 ## Security Best Practices
 
 1. **Use OIDC authentication** - No secrets stored in pipeline
 2. **Environment approvals** - Require approval for prod
-3. **Separate pipelines** - CI/CD and app deployment are separate
-4. **RBAC** - Use least privilege access
-5. **Secrets in Key Vault** - Never hardcode secrets
-6. **Branch policies** - Require PR reviews for main branch
+3. **RBAC** - Use least privilege access
+4. **Secrets in Key Vault** - Never hardcode secrets
+5. **Branch policies** - Require PR reviews for main branch
 
-## Support
+## Related Repositories
 
-For issues:
-- Check pipeline logs in Azure DevOps
-- Review Terraform state in Azure Storage
-- Verify service connection permissions
-- Check AKS cluster health
+- **Application**: [profemzy/devops-coach](https://github.com/profemzy/devops-coach) (this repo)
+- **Infrastructure**: [profemzy/infotitans-azure](https://github.com/profemzy/infotitans-azure) (Terraform for AKS, ACR, Key Vault)
