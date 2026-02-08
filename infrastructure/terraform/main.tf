@@ -161,7 +161,7 @@ resource "azurerm_subnet_network_security_group_association" "aks" {
 # =============================================================================
 module "acr" {
   source  = "Azure/avm-res-containerregistry-registry/azurerm"
-  version = "0.1.0"
+  version = "0.5.1"
 
   name                = "${local.project_name}${local.environment}acr"
   resource_group_name = azurerm_resource_group.main.name
@@ -243,7 +243,7 @@ module "aks" {
 # =============================================================================
 module "keyvault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.9.1"
+  version = "0.10.2"
 
   name                = "${local.project_name}-${local.environment}-kv"
   resource_group_name = azurerm_resource_group.main.name
