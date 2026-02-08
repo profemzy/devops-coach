@@ -1,0 +1,154 @@
+# =============================================================================
+# Pipeline: 02-infrastructure-cd.yml
+# Purpose: CD Pipeline for Terraform Infrastructure Deployment
+# Triggers: Successful completion of CI pipeline
+# =============================================================================
+
+trigger: none  # Only triggered by CI pipeline completion
+
+name: "Infrastructure CD Pipeline"
+
+variables:
+  tf_version: "1.10.0"
+  azureServiceConnection: "terraformiacdevops1"
+  backendResourceGroup: "terraform-storage-rg"
+  backendStorageAccount: "terraformstatewakopsaks"
+  backendContainerName: "tfstatefiles"
+  ARM_SUBSCRIPTION_ID: "675ec6f5-d0e6-4d1e-a3b5-f9c3f3508ba5"
+  ARM_TENANT_ID: "c108f6b2-fea0-4910-adfa-1a9ab4d3bffd"
+
+resources:
+  pipelines:
+    - pipeline: infrastructure-ci
+      source: "01-infrastructure-ci"
+      trigger:
+        enabled: true
+        branches:
+          include:
+            - master
+            - main
+
+# Parameters for selective environment deployment
+parameters:
+  - name: deployDev
+    displayName: "Deploy to DEV"
+    type: boolean
+    default: true
+  - name: deployProd
+    displayName: "Deploy to PROD"
+    type: boolean
+    default: true
+
+stages:
+  # ==========================================================================
+  # Stage 1: DEV Deployment (Auto-apply)
+  # ==========================================================================
+  - stage: Deploy_DEV
+    displayName: "🚀 DEV - Deploy"
+    condition: ${{ parameters.deployDev }}
+    variables:
+      environment: "dev"
+      tfvarsFile: "dev.tfvars"
+      backendKey: "dev-terraform.tfstate"
+    jobs:
+      - deployment: Terraform_Deploy_DEV
+        displayName: "Terraform Deploy to DEV"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "dev"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: TerraformInstaller@1
+                  inputs:
+                    terraformVersion: $(tf_version)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Init"
+                  inputs:
+                    provider: "azurerm"
+                    command: "init"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    backendServiceArm: $(azureServiceConnection)
+                    backendAzureRmResourceGroupName: $(backendResourceGroup)
+                    backendAzureRmStorageAccountName: $(backendStorageAccount)
+                    backendAzureRmContainerName: $(backendContainerName)
+                    backendAzureRmKey: $(backendKey)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Plan"
+                  inputs:
+                    provider: "azurerm"
+                    command: "plan"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    commandOptions: "-var-file=$(tfvarsFile) -out=tfplan"
+                    environmentServiceNameAzureRM: $(azureServiceConnection)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Apply"
+                  inputs:
+                    provider: "azurerm"
+                    command: "apply"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    commandOptions: "tfplan"
+                    environmentServiceNameAzureRM: $(azureServiceConnection)
+
+  # ==========================================================================
+  # Stage 2: PROD Deployment (Requires Approval)
+  # ==========================================================================
+  - stage: Deploy_PROD
+    displayName: "🚀 PROD - Deploy (Requires Approval)"
+    dependsOn: Deploy_DEV
+    condition: and(succeeded(), ${{ parameters.deployProd }})
+    variables:
+      environment: "prod"
+      tfvarsFile: "prod.tfvars"
+      backendKey: "prod-terraform.tfstate"
+    jobs:
+      - deployment: Terraform_Deploy_PROD
+        displayName: "Terraform Deploy to PROD"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "prod"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: TerraformInstaller@1
+                  inputs:
+                    terraformVersion: $(tf_version)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Init"
+                  inputs:
+                    provider: "azurerm"
+                    command: "init"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    backendServiceArm: $(azureServiceConnection)
+                    backendAzureRmResourceGroupName: $(backendResourceGroup)
+                    backendAzureRmStorageAccountName: $(backendStorageAccount)
+                    backendAzureRmContainerName: $(backendContainerName)
+                    backendAzureRmKey: $(backendKey)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Plan"
+                  inputs:
+                    provider: "azurerm"
+                    command: "plan"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    commandOptions: "-var-file=$(tfvarsFile) -out=tfplan"
+                    environmentServiceNameAzureRM: $(azureServiceConnection)
+
+                - task: TerraformTaskV4@4
+                  displayName: "Terraform Apply"
+                  inputs:
+                    provider: "azurerm"
+                    command: "apply"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+                    commandOptions: "tfplan"
+                    environmentServiceNameAzureRM: $(azureServiceConnection)

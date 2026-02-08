@@ -1,0 +1,227 @@
+# =============================================================================
+# Pipeline: 03-app-deployment.yml
+# Purpose: Build Docker image and deploy to AKS
+# Triggers: Changes to application code
+# =============================================================================
+
+trigger:
+  branches:
+    include:
+      - master
+      - main
+  paths:
+    include:
+      - devopscoach/**
+      - config/**
+      - Dockerfile
+      - k8s/**
+      - assets/**
+      - pyproject.toml
+      - .env.example
+
+pr:
+  branches:
+    include:
+      - master
+      - main
+
+variables:
+  # Container Registry
+  acrLoginServer: "wackopscoachprodacr.azurecr.io"
+  acrServiceConnection: "wackops-acr-connection"
+  
+  # Kubernetes
+  aksServiceConnection: "wackops-aks-connection"
+  
+  # Image Configuration
+  imageRepository: "wackops-coach"
+  dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
+  
+  # Build ID as tag
+  tag: "$(Build.BuildId)"
+  latestTag: "latest"
+
+stages:
+  # ==========================================================================
+  # Stage 1: Build and Push Docker Image
+  # ==========================================================================
+  - stage: Build
+    displayName: "📦 Build & Push"
+    jobs:
+      - job: Build_and_Push
+        displayName: "Build & Push Docker Image"
+        pool:
+          vmImage: "ubuntu-24.04"
+        steps:
+          - checkout: self
+            displayName: "Checkout Source Code"
+
+          # Build and push Docker image to ACR
+          - task: Docker@2
+            displayName: "Build and Push Image"
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: $(imageRepository)
+              command: "buildAndPush"
+              Dockerfile: $(dockerfilePath)
+              tags: |
+                $(tag)
+                $(latestTag)
+              arguments: "--target app"
+
+          # Update Kubernetes manifests with new image tag
+          - task: Bash@3
+            displayName: "Update K8s Manifests"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Updating Kubernetes manifests with image tag: $(tag)"
+                sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/deployment.yaml
+                sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/worker-deployment.yaml
+                cat k8s/deployment.yaml | grep "image:"
+
+          # Publish Kubernetes manifests as artifact
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish K8s Manifests"
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/k8s"
+              ArtifactName: "kubernetes-manifests"
+              publishLocation: "Container"
+
+  # ==========================================================================
+  # Stage 2: Deploy to DEV
+  # ==========================================================================
+  - stage: Deploy_DEV
+    displayName: "🚀 Deploy to DEV"
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment: Deploy_AKS_DEV
+        displayName: "Deploy to AKS DEV"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "dev"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: kubernetes-manifests
+
+                - task: KubernetesManifest@1
+                  displayName: "Deploy to DEV AKS"
+                  inputs:
+                    action: "deploy"
+                    connectionType: "azureResourceManager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-dev-rg"
+                    kubernetesCluster: "wackops-coach-dev-aks"
+                    namespace: "wackops-coach"
+                    manifests: |
+                      $(Pipeline.Workspace)/kubernetes-manifests/namespace.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/redis.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/secret.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/migration-job.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/deployment.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/worker-deployment.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/service.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/ingress.yaml
+                    containers: |
+                      $(acrLoginServer)/$(imageRepository):$(tag)
+
+                - task: Kubernetes@1
+                  displayName: "Wait for Migration Job"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-dev-rg"
+                    kubernetesCluster: "wackops-coach-dev-aks"
+                    namespace: "wackops-coach"
+                    command: "wait"
+                    arguments: "--for=condition=complete --timeout=300s job/wackops-coach-migration"
+                  continueOnError: true
+
+                - task: Kubernetes@1
+                  displayName: "Rollout Status"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-dev-rg"
+                    kubernetesCluster: "wackops-coach-dev-aks"
+                    namespace: "wackops-coach"
+                    command: "rollout"
+                    arguments: "status deployment/wackops-coach --timeout=300s"
+
+  # ==========================================================================
+  # Stage 3: Deploy to PROD (Requires Approval)
+  # ==========================================================================
+  - stage: Deploy_PROD
+    displayName: "🚀 Deploy to PROD"
+    dependsOn: Deploy_DEV
+    condition: succeeded()
+    jobs:
+      - deployment: Deploy_AKS_PROD
+        displayName: "Deploy to AKS PROD"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "prod"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: kubernetes-manifests
+
+                - task: KubernetesManifest@1
+                  displayName: "Deploy to PROD AKS"
+                  inputs:
+                    action: "deploy"
+                    connectionType: "azureResourceManager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-prod-rg"
+                    kubernetesCluster: "wackops-coach-prod-aks"
+                    namespace: "wackops-coach"
+                    manifests: |
+                      $(Pipeline.Workspace)/kubernetes-manifests/namespace.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/redis.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/secret.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/migration-job.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/deployment.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/worker-deployment.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/service.yaml
+                      $(Pipeline.Workspace)/kubernetes-manifests/ingress.yaml
+                    containers: |
+                      $(acrLoginServer)/$(imageRepository):$(tag)
+
+                - task: Kubernetes@1
+                  displayName: "Wait for Migration Job"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-prod-rg"
+                    kubernetesCluster: "wackops-coach-prod-aks"
+                    namespace: "wackops-coach"
+                    command: "wait"
+                    arguments: "--for=condition=complete --timeout=300s job/wackops-coach-migration"
+                  continueOnError: true
+
+                - task: Kubernetes@1
+                  displayName: "Rollout Status"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackops-coach-prod-rg"
+                    kubernetesCluster: "wackops-coach-prod-aks"
+                    namespace: "wackops-coach"
+                    command: "rollout"
+                    arguments: "status deployment/wackops-coach --timeout=300s"
+
+                - task: Bash@3
+                  displayName: "Verify Deployment"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Verifying deployment at https://wackops.xyz"
+                      sleep 10
+                      curl -sf https://wackops.xyz/up || exit 1
+                      echo "✅ Deployment verified successfully!"
