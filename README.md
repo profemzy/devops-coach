@@ -4,6 +4,13 @@ An AI-powered Flask application designed to help professionals transition into D
 🌐 **Live at:** https://wackops.xyz  
 Powered by [InfoTitans](https://infotitans.com/)
 
+## Infrastructure
+
+The Azure infrastructure (AKS, ACR, Key Vault) for this application is managed separately in the [infotitans-azure](https://github.com/profemzy/infotitans-azure) repository:
+- **Location:** `terraform/wackops-coach/`
+- **Managed by:** Azure DevOps pipelines
+- **Kubernetes:** AKS with Azure Verified Modules
+
 ## Features
 
 - **Skills Assessment** - Analyze your current skills against DevOps requirements
