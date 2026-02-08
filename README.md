@@ -1,6 +1,8 @@
-# DevOps Career Transition Coach
+# WackOps-Coach
 
-An AI-powered Flask application designed to help professionals transition into DevOps careers.
+An AI-powered Flask application designed to help professionals transition into DevOps careers.  
+🌐 **Live at:** https://wackops.xyz  
+Powered by [InfoTitans](https://infotitans.com/)
 
 ## Features
 

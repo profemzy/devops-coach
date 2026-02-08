@@ -1,6 +1,9 @@
 # Kubernetes Deployment
 
-This directory contains Kubernetes manifests for deploying the DevOps Coach application.
+This directory contains Kubernetes manifests for deploying the WackOps-Coach application.
+
+🌐 **Production URL:** https://wackops.xyz  
+Powered by [InfoTitans](https://infotitans.com/)
 
 ## Setup Instructions
 

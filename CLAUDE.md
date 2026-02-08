@@ -1,7 +1,9 @@
-# Project: docker-flask-example
+# Project: WackOps-Coach
 
 ## Purpose
-Production-ready Flask application template demonstrating Docker best practices.
+AI-powered DevOps career transition coach built with Flask and Docker.  
+🌐 **Live at:** https://wackops.xyz  
+Powered by [InfoTitans](https://infotitans.com/)
 
 ## Starting a New Project
 Use the rename script to customize this template for your project:
