@@ -377,7 +377,11 @@ def _prefill_roadmap_form(
                 else:
                     focus_items.append(str(gap))
             if focus_items:
-                form.focus_areas.data = ", ".join(focus_items)
+                # Join and truncate to 500 characters max
+                focus_text = ", ".join(focus_items)
+                if len(focus_text) > 500:
+                    focus_text = focus_text[:497] + "..."
+                form.focus_areas.data = focus_text
 
     if not form.target_role.data:
         form.target_role.data = "DevOps Engineer"

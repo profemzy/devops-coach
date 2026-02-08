@@ -124,12 +124,17 @@
         <!-- Title -->
         <div>
           {{ form.title.label(class="field-label mb-2") }}
-          {{ form.title(class_="field-input") }}
+          {{ form.title(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.title.errors else "field-input")) }}
           {% if form.title.description %}
             <p class="mt-1 text-xs text-gray-500">{{ form.title.description }}</p>
           {% endif %}
           {% if form.title.errors %}
-            <p class="mt-1 text-xs text-red-600">{{ form.title.errors[0] }}</p>
+            <p class="mt-1 text-sm font-medium text-red-600 flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              {{ form.title.errors[0] }}
+            </p>
           {% endif %}
         </div>
 
@@ -146,20 +151,30 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             {{ form.target_role.label(class="field-label mb-2") }}
-            {{ form.target_role(class_="field-input") }}
+            {{ form.target_role(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.target_role.errors else "field-input")) }}
             {% if form.target_role.description %}
               <p class="mt-1 text-xs text-gray-500">{{ form.target_role.description }}</p>
             {% endif %}
             {% if form.target_role.errors %}
-              <p class="mt-1 text-xs text-red-600">{{ form.target_role.errors[0] }}</p>
+              <p class="mt-1 text-sm font-medium text-red-600 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                {{ form.target_role.errors[0] }}
+              </p>
             {% endif %}
           </div>
 
           <div>
             {{ form.timeline_weeks.label(class="field-label mb-2") }}
-            {{ form.timeline_weeks(class_="field-input") }}
+            {{ form.timeline_weeks(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.timeline_weeks.errors else "field-input")) }}
             {% if form.timeline_weeks.errors %}
-              <p class="mt-1 text-xs text-red-600">{{ form.timeline_weeks.errors[0] }}</p>
+              <p class="mt-1 text-sm font-medium text-red-600 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                {{ form.timeline_weeks.errors[0] }}
+              </p>
             {% endif %}
           </div>
         </div>
@@ -167,10 +182,19 @@
         <!-- Focus Areas -->
         <div>
           {{ form.focus_areas.label(class="field-label mb-2") }}
-          {{ form.focus_areas(class_="field-input", rows="2") }}
+          {{ form.focus_areas(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.focus_areas.errors else "field-input"), rows="2") }}
           {% if form.focus_areas.description %}
             <p class="mt-1 text-xs text-gray-500">{{ form.focus_areas.description }}</p>
           {% endif %}
+          {% if form.focus_areas.errors %}
+            <p class="mt-1 text-sm font-medium text-red-600 flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              {{ form.focus_areas.errors[0] }}
+            </p>
+          {% endif %}
+          <p class="mt-1 text-xs text-gray-400">{{ form.focus_areas.data|length if form.focus_areas.data else 0 }}/500 characters</p>
         </div>
 
         <!-- Assessment Info (only show if not from_assessment) -->

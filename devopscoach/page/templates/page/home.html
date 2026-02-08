@@ -1,141 +1,197 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}DevOps Career Transition Coach{% endblock %}
+{% block title %}WackOps-Coach - Your DevOps Journey Starts Here{% endblock %}
 
 {% block content %}
-<section class="relative overflow-hidden">
-  <!-- Decorative background -->
+<!-- Hero Section - Enhanced with 3D Elements -->
+<section class="relative overflow-hidden min-h-[90vh] flex items-center">
+  <!-- Animated Background Elements -->
   <div class="absolute inset-0 -z-10">
-    <div class="absolute -top-24 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-emerald-300/40 via-amber-300/30 to-rose-300/30 blur-3xl"></div>
-    <div class="absolute -bottom-24 right-0 h-[22rem] w-[22rem] rounded-full bg-gradient-to-br from-amber-400/20 via-emerald-400/20 to-rose-300/20 blur-3xl"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-white/50 via-white/0 to-white/70"></div>
+    <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-emerald-400/20 to-cyan-400/10 
+                rounded-full blur-3xl animate-float-slow"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-amber-400/15 to-rose-400/10 
+                rounded-full blur-3xl animate-float-slow" style="animation-delay: -5s;"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] 
+                bg-gradient-to-br from-purple-400/10 to-pink-400/5 rounded-full blur-3xl animate-float-slow" 
+         style="animation-delay: -10s;"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 sm:pt-24">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-      <!-- Hero copy -->
-      <div class="lg:col-span-7 reveal">
-        <div class="section-kicker">
-          <span class="inline-flex h-2 w-2 rounded-full bg-emerald-600"></span>
-          AI-powered roadmap for your DevOps transition
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <!-- Hero Copy -->
+      <div class="lg:col-span-7 space-y-8">
+        <div class="observe-reveal">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="section-kicker animate-pulse-glow">
+              <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-amber-600">
+                AI-powered roadmap for your DevOps transition
+              </span>
+            </div>
+            <a href="https://infotitans.com/" target="_blank" rel="noopener noreferrer" 
+               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors text-xs font-semibold text-slate-600">
+              <svg class="w-3.5 h-3.5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+              </svg>
+              Powered by InfoTitans
+            </a>
+          </div>
         </div>
 
-        <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900">
+        <h1 class="observe-reveal text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]" 
+            style="transition-delay: 0.1s;">
           Transition into DevOps with
-          <span class="brand-text">clarity</span>
-          and
-          <span class="brand-text">momentum</span>
+          <span class="relative inline-block">
+            <span class="brand-text">clarity</span>
+            <svg class="absolute -bottom-2 left-0 w-full h-3 text-amber-400" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
+              <path d="M2 8C50 2 150 2 198 8" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw" style="stroke-dasharray: 200; stroke-dashoffset: 200;"/>
+            </svg>
+          </span>
+          <br>and
+          <span class="relative inline-block">
+            <span class="brand-text">momentum</span>
+            <svg class="absolute -bottom-2 left-0 w-full h-3 text-emerald-400" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
+              <path d="M2 8C50 2 150 2 198 8" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="animate-draw" style="stroke-dasharray: 200; stroke-dashoffset: 200; animation-delay: 0.5s;"/>
+            </svg>
+          </span>
         </h1>
 
-        <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl">
-          DevOpsCoach turns your current experience into a practical plan.
-          Get an AI skills assessment, a personalized learning roadmap, curated resources,
+        <p class="observe-reveal text-xl sm:text-2xl text-slate-600 max-w-2xl leading-relaxed" 
+           style="transition-delay: 0.2s;">
+          WackOps-Coach turns your current experience into a practical plan.
+          Get an AI skills assessment, personalized learning roadmap, curated resources,
           and portfolio projects to prove you can do the work.
         </p>
 
-        <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center reveal reveal-delay-1">
+        <div class="observe-reveal flex flex-col sm:flex-row gap-4 sm:items-center" style="transition-delay: 0.3s;">
           {% if current_user.is_authenticated %}
             <a href="{{ url_for('dashboard.index') }}"
-               class="btn-primary">
+               class="btn-magnetic text-lg px-8 py-4">
               Go to Dashboard
-              <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
           {% else %}
             <a href="{{ url_for('auth.register') }}"
-               class="btn-primary">
+               class="btn-magnetic text-lg px-8 py-4">
               Get Started Free
-              <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
 
             <a href="{{ url_for('auth.login') }}"
-               class="btn-secondary">
+               class="btn-secondary text-lg px-8 py-4">
               Sign in
             </a>
-
-            <div class="text-sm text-slate-500 sm:ml-2">
-              No credit card • Start in 3 minutes
-            </div>
           {% endif %}
         </div>
 
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl reveal reveal-delay-2">
-          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
-            <div class="text-sm font-semibold text-slate-900">Skills assessment</div>
-            <div class="text-sm text-slate-600 mt-1">Know your gaps, prioritize smartly.</div>
+        <div class="observe-reveal flex items-center gap-6 text-sm text-slate-500" style="transition-delay: 0.4s;">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span>No credit card required</span>
           </div>
-          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
-            <div class="text-sm font-semibold text-slate-900">Learning roadmap</div>
-            <div class="text-sm text-slate-600 mt-1">Weeks and milestones, not guesswork.</div>
-          </div>
-          <div class="rounded-2xl border border-white/50 bg-white/70 backdrop-blur px-4 py-4 shadow-sm">
-            <div class="text-sm font-semibold text-slate-900">Portfolio projects</div>
-            <div class="text-sm text-slate-600 mt-1">Build proof employers can trust.</div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span>Start in 3 minutes</span>
           </div>
         </div>
+
       </div>
 
-      <!-- Hero preview card -->
-      <div class="lg:col-span-5 reveal reveal-delay-1">
-        <div class="relative rounded-3xl bg-white/70 backdrop-blur border border-white/60 shadow-xl overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/60 via-white/30 to-amber-50/60"></div>
-          <div class="relative p-6 sm:p-8">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm font-semibold text-slate-900">Example outcome</div>
-                <div class="text-xs text-slate-500">Generated after one assessment</div>
-              </div>
-              <div class="inline-flex items-center rounded-full bg-emerald-600 text-white text-xs font-semibold px-3 py-1">
-                Ready in minutes
+      <!-- Hero Visual - 3D Card Stack -->
+      <div class="lg:col-span-5 observe-scale" style="transition-delay: 0.3s;">
+        <div class="relative perspective-1000">
+          <!-- Background Cards -->
+          <div class="absolute -top-4 -right-4 w-full h-full glass rounded-3xl transform rotate-3 opacity-60"></div>
+          <div class="absolute -top-2 -right-2 w-full h-full glass rounded-3xl transform rotate-1 opacity-80"></div>
+          
+          <!-- Main Card -->
+          <div class="relative glass-strong rounded-3xl shadow-2xl overflow-hidden card-3d">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-white font-semibold">Skills Assessment</div>
+                    <div class="text-emerald-200 text-xs">Completed 2 minutes ago</div>
+                  </div>
+                </div>
+                <span class="px-3 py-1 bg-white/20 rounded-full text-white text-xs font-medium">
+                  AI Generated
+                </span>
               </div>
             </div>
-
-            <div class="mt-6 space-y-4">
-              <div class="rounded-2xl bg-white/80 border border-slate-100 p-4">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm font-semibold text-slate-900">DevOps readiness</div>
-                  <div class="text-sm font-bold text-emerald-700">72/100</div>
+            
+            <!-- Card Content -->
+            <div class="p-6 space-y-5">
+              <!-- Score Circle -->
+              <div class="flex items-center gap-4">
+                <div class="relative w-20 h-20">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <path class="text-emerald-500 score-circle" stroke-dasharray="72, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-slate-900">72</span>
+                  </div>
                 </div>
-                <div class="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div class="h-full w-[72%] bg-gradient-to-r from-emerald-600 to-amber-500"></div>
+                <div>
+                  <div class="text-sm text-slate-500">DevOps Readiness</div>
+                  <div class="text-lg font-semibold text-emerald-600">Intermediate Level</div>
+                  <div class="text-xs text-slate-400">You're on the right track!</div>
                 </div>
               </div>
-
-              <div class="rounded-2xl bg-white/80 border border-slate-100 p-4">
-                <div class="text-sm font-semibold text-slate-900">Top priorities</div>
-                <ul class="mt-3 space-y-2 text-sm text-slate-700">
-                  <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-emerald-500"></span>
-                    Build CI/CD pipeline with GitHub Actions
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-amber-500"></span>
-                    Infrastructure as Code (Terraform) fundamentals
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <span class="mt-1 h-2 w-2 rounded-full bg-rose-500"></span>
-                    Docker + Kubernetes deployment project
-                  </li>
-                </ul>
+              
+              <!-- Skill Gaps -->
+              <div class="space-y-3">
+                <div class="text-sm font-semibold text-slate-700">Priority Skill Gaps</div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-3 p-3 bg-rose-50 rounded-xl border border-rose-100">
+                    <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+                    <span class="text-sm text-slate-700 flex-1">CI/CD Pipeline Design</span>
+                    <span class="text-xs font-medium text-rose-600">High Priority</span>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+                    <span class="text-sm text-slate-700 flex-1">Terraform & IaC</span>
+                    <span class="text-xs font-medium text-amber-600">Medium Priority</span>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    <span class="text-sm text-slate-700 flex-1">Docker Fundamentals</span>
+                    <span class="text-xs font-medium text-emerald-600">On Track</span>
+                  </div>
+                </div>
               </div>
-
-              <div class="rounded-2xl bg-white/80 border border-slate-100 p-4">
-                <div class="text-sm font-semibold text-slate-900">Suggested roles</div>
-                <div class="mt-3 flex flex-wrap gap-2">
+              
+              <!-- Recommended Roles -->
+              <div>
+                <div class="text-sm font-semibold text-slate-700 mb-2">Recommended Roles</div>
+                <div class="flex flex-wrap gap-2">
                   <span class="tag-pill">DevOps Engineer</span>
                   <span class="tag-pill">Platform Engineer</span>
-                  <span class="inline-flex items-center rounded-full bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3 py-1">SRE (Junior)</span>
+                  <span class="tag-pill">SRE (Junior)</span>
                 </div>
               </div>
-
-              <div class="rounded-2xl border border-white/40 bg-gradient-to-r from-emerald-600 to-amber-500 p-4 text-white">
-                <div class="flex items-center justify-between">
+              
+              <!-- CTA -->
+              <div class="pt-4 border-t border-slate-100">
+                <div class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-xl text-white">
                   <div>
-                    <div class="text-sm font-semibold">Start with your assessment</div>
-                    <div class="text-xs text-white/80">It takes about 3 minutes.</div>
+                    <div class="font-semibold">Your Personalized Roadmap</div>
+                    <div class="text-sm text-white/80">12-week learning plan ready</div>
                   </div>
                   <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -143,9 +199,31 @@
                 </div>
               </div>
             </div>
-
-            <div class="mt-6 text-xs text-slate-500">
-              Tip: Already signed up? Use “Sign in” to continue.
+          </div>
+          
+          <!-- Floating Elements -->
+          <div class="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-4 shadow-xl animate-float" style="animation-delay: -2s;">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-slate-800">Resources</div>
+                <div class="text-xs text-slate-500">Curated for you</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="absolute -top-4 -right-4 glass-strong rounded-2xl p-3 shadow-xl animate-float" style="animation-delay: -4s;">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-bold text-slate-800">4.9 Rating</span>
             </div>
           </div>
         </div>
@@ -154,120 +232,443 @@
   </div>
 </section>
 
-<section id="features" class="py-16 sm:py-20">
+<!-- Features Section - Bento Grid Layout -->
+<section id="features" class="py-24 relative">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <div class="section-kicker justify-center">
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16 observe-reveal">
+      <div class="section-kicker justify-center mb-4">
+        <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+        </svg>
         Features
       </div>
-      <h2 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
-        Everything you need to break into DevOps
+      <h2 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 mb-6">
+        Everything you need to break into
+        <span class="gradient-text">DevOps</span>
       </h2>
-      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
+      <p class="text-xl text-slate-600">
         A clear, step-by-step system: assess → plan → learn → build → apply.
       </p>
     </div>
 
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+    <!-- Bento Grid -->
+    <div class="bento-grid">
+      <!-- Large Feature Card - Skills Assessment -->
+      <div class="bento-item bento-item-large group observe-reveal">
+        <div class="h-full p-8 flex flex-col">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 
+                      flex items-center justify-center text-white shadow-lg shadow-emerald-500/30
+                      group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="mt-6 text-2xl font-bold text-slate-900">AI Skills Assessment</h3>
+          <p class="mt-3 text-slate-600 flex-1">
+            Our AI analyzes your current skills, identifies gaps, and creates a personalized 
+            roadmap tailored to your background and career goals. Get insights on what to learn next.
+          </p>
+          <div class="mt-6 flex items-center text-emerald-600 font-semibold group-hover:gap-3 transition-all">
+            <span>Start Assessment</span>
+            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">AI-Powered</span>
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">3 Minutes</span>
+          </div>
         </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Skills assessment</h3>
-        <p class="mt-2 text-slate-600">
-          Understand your strengths, identify gaps, and get targeted next steps.
-        </p>
       </div>
 
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-          </svg>
-        </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Custom roadmaps</h3>
-        <p class="mt-2 text-slate-600">
-          A realistic plan based on your schedule, background, and target role.
-        </p>
-      </div>
-
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Curated resources</h3>
-        <p class="mt-2 text-slate-600">
-          Save and organize tutorials, courses, and certifications that match your plan.
-        </p>
-      </div>
-
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-        </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Portfolio projects</h3>
-        <p class="mt-2 text-slate-600">
-          Build hands-on projects that demonstrate real DevOps workflows.
-        </p>
-      </div>
-
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-        </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Interview prep</h3>
-        <p class="mt-2 text-slate-600">
-          Practice DevOps questions and scenarios—technical and behavioral.
-        </p>
-      </div>
-
-      <div class="group rounded-3xl border border-white/60 bg-white/70 backdrop-blur p-6 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
-        <div class="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center text-white shadow-md">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <h3 class="mt-4 text-lg font-bold text-slate-900">Job tracking</h3>
-        <p class="mt-2 text-slate-600">
-          Track applications and stay organized as you interview.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="py-16 sm:py-20">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="rounded-3xl overflow-hidden border border-white/40 bg-gradient-to-r from-emerald-600 via-emerald-500 to-amber-500 shadow-xl">
-      <div class="p-8 sm:p-12 lg:p-14 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-        <div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Ready to start your DevOps journey?
-          </h2>
-          <p class="mt-3 text-white/80 text-lg max-w-2xl">
-            Create a free account, complete your assessment, and get a roadmap you can follow.
+      <!-- Custom Roadmaps -->
+      <div class="bento-item group observe-reveal" style="transition-delay: 0.1s;">
+        <div class="h-full p-6">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 
+                      flex items-center justify-center text-white shadow-lg shadow-amber-500/30
+                      group-hover:scale-110 transition-all duration-300">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Custom Roadmaps</h3>
+          <p class="mt-2 text-sm text-slate-600">
+            Week-by-week learning plans with milestones, not guesswork.
           </p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <a href="{{ url_for('auth.register') }}"
-             class="btn-secondary">
-            Get Started Free
-          </a>
-          <a href="{{ url_for('auth.login') }}"
-             class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-white border border-white/40 bg-white/10 hover:bg-white/20 transition-all">
-            Sign in
-          </a>
+      </div>
+
+      <!-- Learning Resources -->
+      <div class="bento-item group observe-reveal" style="transition-delay: 0.15s;">
+        <div class="h-full p-6">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 
+                      flex items-center justify-center text-white shadow-lg shadow-sky-500/30
+                      group-hover:scale-110 transition-all duration-300">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Curated Resources</h3>
+          <p class="mt-2 text-sm text-slate-600">
+            Save and organize tutorials, courses, and certifications.
+          </p>
+        </div>
+      </div>
+
+      <!-- Portfolio Projects -->
+      <div class="bento-item group observe-reveal" style="transition-delay: 0.2s;">
+        <div class="h-full p-6">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 
+                      flex items-center justify-center text-white shadow-lg shadow-purple-500/30
+                      group-hover:scale-110 transition-all duration-300">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Portfolio Projects</h3>
+          <p class="mt-2 text-sm text-slate-600">
+            Build hands-on projects that demonstrate real DevOps workflows.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interview Prep - Wide -->
+      <div class="bento-item bento-item-wide group observe-reveal" style="transition-delay: 0.25s;">
+        <div class="h-full p-6 flex items-center gap-6">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 
+                      flex items-center justify-center text-white shadow-lg shadow-rose-500/30
+                      group-hover:scale-110 transition-all duration-300 flex-shrink-0">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Interview Preparation</h3>
+            <p class="mt-1 text-sm text-slate-600">
+              Practice DevOps-specific questions and scenarios—both technical and behavioral. 
+              Get feedback and improve your confidence.
+            </p>
+          </div>
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium whitespace-nowrap">
+            Coming Soon
+          </span>
+        </div>
+      </div>
+
+      <!-- Job Tracking -->
+      <div class="bento-item group observe-reveal" style="transition-delay: 0.3s;">
+        <div class="h-full p-6">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 
+                      flex items-center justify-center text-white shadow-lg shadow-blue-500/30
+                      group-hover:scale-110 transition-all duration-300">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">Job Search</h3>
+          <p class="mt-2 text-sm text-slate-600">
+            Track applications and stay organized as you interview.
+          </p>
+          <span class="inline-block mt-3 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+            Coming Soon
+          </span>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- How It Works Section -->
+<section class="py-24 relative overflow-hidden">
+  <!-- Background -->
+  <div class="absolute inset-0 bg-gradient-to-b from-slate-50 to-white"></div>
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div class="text-center max-w-3xl mx-auto mb-16 observe-reveal">
+      <div class="section-kicker justify-center mb-4">
+        <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        How It Works
+      </div>
+      <h2 class="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+        Your journey to DevOps in <span class="gradient-text">4 simple steps</span>
+      </h2>
+    </div>
+
+    <!-- Steps -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Step 1 -->
+      <div class="observe-reveal relative" style="transition-delay: 0.1s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 
+                      flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-6">
+            1
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-3">Take the Assessment</h3>
+          <p class="text-slate-600">
+            Answer questions about your current skills, experience, and learning preferences. 
+            Takes just 3 minutes.
+          </p>
+        </div>
+        <!-- Connector -->
+        <div class="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-emerald-400 to-amber-400"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="observe-reveal relative" style="transition-delay: 0.2s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 
+                      flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-6">
+            2
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-3">Get AI Insights</h3>
+          <p class="text-slate-600">
+            Our AI analyzes your profile and compares it with current DevOps trends 
+            to identify your skill gaps.
+          </p>
+        </div>
+        <!-- Connector -->
+        <div class="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="observe-reveal relative" style="transition-delay: 0.3s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 
+                      flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-6">
+            3
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-3">Follow Your Roadmap</h3>
+          <p class="text-slate-600">
+            Get a personalized learning plan with curated resources, projects, 
+            and milestones to track your progress.
+          </p>
+        </div>
+        <!-- Connector -->
+        <div class="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-400 to-rose-400"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="observe-reveal" style="transition-delay: 0.4s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 
+                      flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-6">
+            4
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-3">Land Your Dream Job</h3>
+          <p class="text-slate-600">
+            Build a portfolio, practice interviews, and apply with confidence. 
+            Track your job applications until you get hired.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-24 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16 observe-reveal">
+      <div class="section-kicker justify-center mb-4">
+        <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+        </svg>
+        Success Stories
+      </div>
+      <h2 class="text-4xl font-bold tracking-tight text-slate-900">
+        Join thousands who've made the <span class="gradient-text">switch</span>
+      </h2>
+    </div>
+
+    <!-- Testimonial Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Testimonial 1 -->
+      <div class="observe-reveal" style="transition-delay: 0.1s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="flex gap-1 mb-4">
+            {% for i in range(5) %}
+            <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            {% endfor %}
+          </div>
+          <p class="text-slate-700 mb-6 leading-relaxed">
+            "WackOps-Coach helped me transition from a support role to a DevOps Engineer in just 6 months. 
+            The personalized roadmap was exactly what I needed."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold">
+              SM
+            </div>
+            <div>
+              <div class="font-semibold text-slate-900">Sarah Mitchell</div>
+              <div class="text-sm text-slate-500">DevOps Engineer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="observe-reveal" style="transition-delay: 0.2s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="flex gap-1 mb-4">
+            {% for i in range(5) %}
+            <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            {% endfor %}
+          </div>
+          <p class="text-slate-700 mb-6 leading-relaxed">
+            "The AI assessment was spot-on. It identified gaps I didn't even know I had and 
+            gave me a clear path to fill them. Highly recommended!"
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center text-white font-bold">
+              JC
+            </div>
+            <div>
+              <div class="font-semibold text-slate-900">James Chen</div>
+              <div class="text-sm text-slate-500">Site Reliability Engineer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="observe-reveal" style="transition-delay: 0.3s;">
+        <div class="glass-strong rounded-3xl p-8 h-full card-hover">
+          <div class="flex gap-1 mb-4">
+            {% for i in range(5) %}
+            <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            {% endfor %}
+          </div>
+          <p class="text-slate-700 mb-6 leading-relaxed">
+            "As a developer, I wanted to move into DevOps. This platform gave me the structure 
+            I needed. The portfolio projects were especially helpful."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white font-bold">
+              AR
+            </div>
+            <div>
+              <div class="font-semibold text-slate-900">Alex Rodriguez</div>
+              <div class="text-sm text-slate-500">Platform Engineer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section - Enhanced -->
+<section class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="observe-scale">
+      <div class="relative rounded-[2.5rem] overflow-hidden">
+        <!-- Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-500 to-amber-500"></div>
+        
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-float"></div>
+          <div class="absolute bottom-0 right-0 w-96 h-96 bg-amber-400/20 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="relative px-8 py-16 sm:px-16 sm:py-20 text-center">
+          <h2 class="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
+            Ready to start your<br>DevOps journey?
+          </h2>
+          <p class="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+            Create a free account, complete your assessment, and get a personalized 
+            roadmap you can follow to land your dream job.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('auth.register') }}"
+               class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-emerald-700 
+                      font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              Get Started Free
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+            <a href="{{ url_for('auth.login') }}"
+               class="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold 
+                      rounded-2xl border-2 border-white/40 hover:bg-white/10 transition-all duration-300">
+              Sign In
+            </a>
+          </div>
+          
+          <!-- Trust Indicators -->
+          <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-white/70 text-sm">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              Free to Get Started
+            </span>
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              No Credit Card Required
+            </span>
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              10,000+ Users
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block scripts %}
+<script>
+  // Initialize Intersection Observer for scroll animations
+  document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.observe-reveal, .observe-scale').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // Animate draw elements when visible
+    const drawElements = document.querySelectorAll('.animate-draw');
+    drawElements.forEach(el => {
+      setTimeout(() => {
+        el.style.strokeDashoffset = '0';
+      }, 500);
+    });
+  });
+</script>
+{% endblock %}
 {% endblock %}

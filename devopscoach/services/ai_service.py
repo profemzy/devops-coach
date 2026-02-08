@@ -155,7 +155,7 @@ Analyze the following candidate's skills for a DevOps career transition:
 - Weekly Learning Hours: {skills_data.get("weekly_learning_hours")}
 {current_trends}
 
-IMPORTANT: As their DevOps Career Coach, recommend the most suitable DevOps roles based on their background (e.g., DevOps Engineer, SRE, Platform Engineer). Consider their current role and technical strengths when making recommendations.
+IMPORTANT: As their WackOps-Coach, recommend the most suitable DevOps roles based on their background (e.g., DevOps Engineer, SRE, Platform Engineer). Consider their current role and technical strengths when making recommendations.
 
 Use the current DevOps trends provided above to ensure your recommendations reflect the latest best practices and in-demand skills.
 
