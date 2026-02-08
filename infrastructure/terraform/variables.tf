@@ -2,9 +2,6 @@
 # WackOps-Coach Infrastructure - Variables
 # =============================================================================
 
-# =============================================================================
-# General Variables
-# =============================================================================
 variable "environment" {
   description = "Environment name (dev, qa, stage, prod)"
   type        = string
@@ -38,7 +35,7 @@ variable "subnet_aks_prefix" {
 }
 
 variable "subnet_aci_prefix" {
-  description = "Address prefix for ACI subnet (virtual nodes)"
+  description = "Address prefix for ACI subnet"
   type        = string
   default     = "10.0.2.0/24"
 }
@@ -125,10 +122,16 @@ variable "dns_zone_name" {
   default     = "wackops.xyz"
 }
 
-variable "create_dns_zone" {
-  description = "Whether to create a new DNS zone or use existing"
+variable "dns_resource_group_name" {
+  description = "Resource group containing the DNS zone"
+  type        = string
+  default     = "dns-mgt"
+}
+
+variable "create_dns_records" {
+  description = "Whether to create DNS A records"
   type        = bool
-  default     = false
+  default     = true
 }
 
 # =============================================================================
