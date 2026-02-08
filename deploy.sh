@@ -104,7 +104,7 @@ show_status() {
 
   echo ""
   echo "🌐 Application URL:"
-  echo "   https://devops.infotitans.com"
+  echo "   https://wackops.xyz"
 
   echo ""
   echo "📋 Useful commands:"

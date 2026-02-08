@@ -12,7 +12,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: devops.infotitans.com
+    - host: wackops.xyz
       http:
         paths:
           - path: /
@@ -24,5 +24,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - devops.infotitans.com
-      secretName: devops-coach-tls
+        - wackops.xyz
+      secretName: wackops-xyz-tls
