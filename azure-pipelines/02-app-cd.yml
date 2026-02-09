@@ -11,7 +11,7 @@ name: "WackOps-Coach Application CD"
 resources:
   pipelines:
     - pipeline: app-ci
-      source: "01-App-CI"
+      source: "05-App-CI"
       trigger:
         enabled: true
         branches:
