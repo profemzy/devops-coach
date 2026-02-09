@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: devops-coach
+  name: wackops-coach
   labels:
-    name: devops-coach
+    name: wackops-coach
     istio-injection: enabled

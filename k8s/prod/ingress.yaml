@@ -1,0 +1,32 @@
+# =============================================================================
+# Ingress for PROD Environment
+# URL: https://wackops.xyz
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wackops-coach-ingress
+  namespace: wackops-coach
+  annotations:
+    acme.cert-manager.io/http01-ingress-class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/issue-temporary-certificate: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: wackops.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wackops-coach
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - wackops.xyz
+      secretName: wackops-xyz-tls

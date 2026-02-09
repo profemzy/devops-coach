@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wackops-coach-migration
+  namespace: wackops-coach
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: migration
+          image: prodacrva1ng1.azurecr.io/wackops-coach:latest
+          imagePullPolicy: Always
+          command: ["flask", "db", "migrate", "upgrade", "head"]
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: POSTGRES_PORT
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: REDIS_URL
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wackops-coach-secrets
+                  key: SECRET_KEY
+      restartPolicy: OnFailure
+  backoffLimit: 1

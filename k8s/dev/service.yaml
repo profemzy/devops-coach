@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: devops-coach
-  namespace: devops-coach
+  name: wackops-coach
+  namespace: wackops-coach
 spec:
   ports:
     - port: 80
@@ -10,4 +10,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: devops-coach
+    app: wackops-coach
