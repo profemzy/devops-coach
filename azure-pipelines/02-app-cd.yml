@@ -1,0 +1,274 @@
+# =============================================================================
+# Pipeline: 02-app-cd.yml
+# Purpose: Deploy WackOps-Coach application to AKS clusters
+# Triggers: Successful CI builds or manual runs
+# =============================================================================
+
+trigger: none  # Only triggered by CI pipeline or manual runs
+
+name: "WackOps-Coach Application CD"
+
+resources:
+  pipelines:
+    - pipeline: app-ci
+      source: "01-App-CI"
+      trigger:
+        enabled: true
+        branches:
+          include:
+            - master
+            - main
+
+variables:
+  # Container Registry
+  acrLoginServer: "wackopscoachdevacr.azurecr.io"
+  acrLoginServerProd: "wackopscoachprodacr.azurecr.io"
+  
+  # Kubernetes
+  aksServiceConnection: "wackops-aks-connection"
+  
+  # Image Configuration
+  imageRepository: "wackops-coach"
+
+# Parameters for manual runs
+parameters:
+  - name: imageTag
+    displayName: "Image Tag to Deploy"
+    type: string
+    default: "latest"
+  - name: deployDev
+    displayName: "Deploy to DEV"
+    type: boolean
+    default: true
+  - name: deployProd
+    displayName: "Deploy to PROD"
+    type: boolean
+    default: true
+
+stages:
+  # ==========================================================================
+  # Stage 1: Deploy to DEV
+  # ==========================================================================
+  - stage: Deploy_DEV
+    displayName: "🚀 Deploy to DEV"
+    condition: ${{ parameters.deployDev }}
+    variables:
+      imageTag: ${{ coalesce(variables['resources.pipeline.app-ci.runName'], parameters.imageTag) }}
+    jobs:
+      - deployment: Deploy_AKS_DEV
+        displayName: "Deploy to DEV AKS"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "dev"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                # Download build info from CI
+                - task: DownloadBuildArtifacts@1
+                  displayName: "Download Build Info"
+                  inputs:
+                    buildType: "specific"
+                    project: "$(System.TeamProject)"
+                    pipeline: "01-App-CI"
+                    buildVersionToDownload: "latestFromBranch"
+                    branchName: "$(Build.SourceBranch)"
+                    downloadType: "single"
+                    artifactName: "build-info"
+                    downloadPath: "$(System.ArtifactsDirectory)"
+                  continueOnError: true
+
+                # Set image tag
+                - task: Bash@3
+                  displayName: "Set Image Tag"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      if [ -f "$(System.ArtifactsDirectory)/build-info/image-tag.txt" ]; then
+                        TAG=$(cat $(System.ArtifactsDirectory)/build-info/image-tag.txt)
+                        echo "Using tag from CI: $TAG"
+                        echo "##vso[task.setvariable variable=tag]$TAG"
+                      else
+                        echo "Using parameter tag: ${{ parameters.imageTag }}"
+                        echo "##vso[task.setvariable variable=tag]${{ parameters.imageTag }}"
+                      fi
+
+                # Update DEV manifests with image tag
+                - task: Bash@3
+                  displayName: "Update DEV Manifests"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Deploying image: $(acrLoginServer)/$(imageRepository):$(tag)"
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/dev/deployment.yaml
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/dev/worker-deployment.yaml
+                      cat k8s/dev/deployment.yaml | grep "image:"
+
+                # Deploy to DEV AKS
+                - task: KubernetesManifest@1
+                  displayName: "Deploy to DEV AKS"
+                  inputs:
+                    action: "deploy"
+                    connectionType: "azureResourceManager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-dev-rg"
+                    kubernetesCluster: "wackopscoach-dev-aks"
+                    namespace: "wackops-coach"
+                    manifests: |
+                      k8s/dev/namespace.yaml
+                      k8s/dev/redis.yaml
+                      k8s/dev/secret.yaml
+                      k8s/dev/migration-job.yaml
+                      k8s/dev/deployment.yaml
+                      k8s/dev/worker-deployment.yaml
+                      k8s/dev/service.yaml
+                      k8s/dev/ingress.yaml
+
+                - task: Kubernetes@1
+                  displayName: "Wait for Migration"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-dev-rg"
+                    kubernetesCluster: "wackopscoach-dev-aks"
+                    namespace: "wackops-coach"
+                    command: "wait"
+                    arguments: "--for=condition=complete --timeout=300s job/wackops-coach-migration"
+                  continueOnError: true
+
+                - task: Kubernetes@1
+                  displayName: "Rollout Status"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-dev-rg"
+                    kubernetesCluster: "wackopscoach-dev-aks"
+                    namespace: "wackops-coach"
+                    command: "rollout"
+                    arguments: "status deployment/wackops-coach --timeout=300s"
+
+                - task: Bash@3
+                  displayName: "Verify DEV"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Verifying DEV at https://dev.wackops.xyz"
+                      sleep 10
+                      curl -sf https://dev.wackops.xyz/up || exit 1
+                      echo "✅ DEV deployment verified!"
+
+  # ==========================================================================
+  # Stage 2: Deploy to PROD (Requires Approval)
+  # ==========================================================================
+  - stage: Deploy_PROD
+    displayName: "🚀 Deploy to PROD"
+    dependsOn: Deploy_DEV
+    condition: and(succeeded(), ${{ parameters.deployProd }})
+    variables:
+      imageTag: ${{ coalesce(variables['resources.pipeline.app-ci.runName'], parameters.imageTag) }}
+    jobs:
+      - deployment: Deploy_AKS_PROD
+        displayName: "Deploy to PROD AKS"
+        pool:
+          vmImage: "ubuntu-24.04"
+        environment: "prod"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                # Download build info from CI
+                - task: DownloadBuildArtifacts@1
+                  displayName: "Download Build Info"
+                  inputs:
+                    buildType: "specific"
+                    project: "$(System.TeamProject)"
+                    pipeline: "01-App-CI"
+                    buildVersionToDownload: "latestFromBranch"
+                    branchName: "$(Build.SourceBranch)"
+                    downloadType: "single"
+                    artifactName: "build-info"
+                    downloadPath: "$(System.ArtifactsDirectory)"
+                  continueOnError: true
+
+                # Set image tag
+                - task: Bash@3
+                  displayName: "Set Image Tag"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      if [ -f "$(System.ArtifactsDirectory)/build-info/image-tag.txt" ]; then
+                        TAG=$(cat $(System.ArtifactsDirectory)/build-info/image-tag.txt)
+                        echo "Using tag from CI: $TAG"
+                        echo "##vso[task.setvariable variable=tag]$TAG"
+                      else
+                        echo "Using parameter tag: ${{ parameters.imageTag }}"
+                        echo "##vso[task.setvariable variable=tag]${{ parameters.imageTag }}"
+                      fi
+
+                # Update PROD manifests with image tag
+                - task: Bash@3
+                  displayName: "Update PROD Manifests"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Deploying image: $(acrLoginServerProd)/$(imageRepository):$(tag)"
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServerProd)/$(imageRepository):$(tag)|g" k8s/prod/deployment.yaml
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServerProd)/$(imageRepository):$(tag)|g" k8s/prod/worker-deployment.yaml
+                      cat k8s/prod/deployment.yaml | grep "image:"
+
+                # Deploy to PROD AKS
+                - task: KubernetesManifest@1
+                  displayName: "Deploy to PROD AKS"
+                  inputs:
+                    action: "deploy"
+                    connectionType: "azureResourceManager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-prod-rg"
+                    kubernetesCluster: "wackopscoach-prod-aks"
+                    namespace: "wackops-coach"
+                    manifests: |
+                      k8s/prod/namespace.yaml
+                      k8s/prod/redis.yaml
+                      k8s/prod/secret.yaml
+                      k8s/prod/migration-job.yaml
+                      k8s/prod/deployment.yaml
+                      k8s/prod/worker-deployment.yaml
+                      k8s/prod/service.yaml
+                      k8s/prod/ingress.yaml
+
+                - task: Kubernetes@1
+                  displayName: "Wait for Migration"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-prod-rg"
+                    kubernetesCluster: "wackopscoach-prod-aks"
+                    namespace: "wackops-coach"
+                    command: "wait"
+                    arguments: "--for=condition=complete --timeout=300s job/wackops-coach-migration"
+                  continueOnError: true
+
+                - task: Kubernetes@1
+                  displayName: "Rollout Status"
+                  inputs:
+                    connectionType: "Azure Resource Manager"
+                    azureSubscriptionEndpoint: $(aksServiceConnection)
+                    azureResourceGroup: "wackopscoach-prod-rg"
+                    kubernetesCluster: "wackopscoach-prod-aks"
+                    namespace: "wackops-coach"
+                    command: "rollout"
+                    arguments: "status deployment/wackops-coach --timeout=300s"
+
+                - task: Bash@3
+                  displayName: "Verify PROD"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Verifying PROD at https://wackops.xyz"
+                      sleep 10
+                      curl -sf https://wackops.xyz/up || exit 1
+                      echo "✅ PROD deployment verified!"

@@ -1,0 +1,85 @@
+# =============================================================================
+# Pipeline: 01-app-ci.yml
+# Purpose: Build and push Docker image to ACR
+# Triggers: Changes to application code
+# =============================================================================
+
+trigger:
+  branches:
+    include:
+      - master
+      - main
+  paths:
+    include:
+      - devopscoach/**
+      - config/**
+      - Dockerfile
+      - assets/**
+      - pyproject.toml
+      - .env.example
+
+pr:
+  branches:
+    include:
+      - master
+      - main
+
+variables:
+  # Container Registry
+  acrLoginServer: "wackopscoachdevacr.azurecr.io"
+  acrServiceConnection: "wackops-acr-connection"
+  
+  # Image Configuration
+  imageRepository: "wackops-coach"
+  dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
+  
+  # Build ID as tag
+  tag: "$(Build.BuildId)"
+  latestTag: "latest"
+
+stages:
+  # ==========================================================================
+  # Stage 1: Build and Push Docker Image
+  # ==========================================================================
+  - stage: Build
+    displayName: "📦 Build & Push"
+    jobs:
+      - job: Build_and_Push
+        displayName: "Build & Push Docker Image"
+        pool:
+          vmImage: "ubuntu-24.04"
+        steps:
+          - checkout: self
+            displayName: "Checkout Source Code"
+
+          # Build and push Docker image to ACR
+          - task: Docker@2
+            displayName: "Build and Push Image"
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: $(imageRepository)
+              command: "buildAndPush"
+              Dockerfile: $(dockerfilePath)
+              tags: |
+                $(tag)
+                $(latestTag)
+              arguments: "--target app"
+
+          # Publish build info for CD pipeline
+          - task: Bash@3
+            displayName: "Export Build Info"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Image Tag: $(tag)"
+                echo "Image: $(acrLoginServer)/$(imageRepository):$(tag)"
+                echo "$(tag)" > $(Build.ArtifactStagingDirectory)/image-tag.txt
+                echo "$(acrLoginServer)/$(imageRepository):$(tag)" > $(Build.ArtifactStagingDirectory)/image-full.txt
+
+          # Publish artifacts for CD pipeline
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Build Info"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+              ArtifactName: "build-info"
+              publishLocation: "Container"
