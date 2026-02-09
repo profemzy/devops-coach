@@ -27,7 +27,7 @@ pr:
 variables:
   # Container Registry
   acrLoginServer: "wackopscoachdevacr.azurecr.io"
-  acrServiceConnection: "wackops-acr-connection"
+  acrServiceConnection: "terraformiacdevops1"
   
   # Image Configuration
   imageRepository: "wackops-coach"

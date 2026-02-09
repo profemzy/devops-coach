@@ -25,7 +25,7 @@ variables:
   acrLoginServerProd: "wackopscoachprodacr.azurecr.io"
   
   # Kubernetes
-  aksServiceConnection: "wackops-aks-connection"
+  aksServiceConnection: "terraformiacdevops1"
   
   # Image Configuration
   imageRepository: "wackops-coach"
