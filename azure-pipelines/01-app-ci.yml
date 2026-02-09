@@ -27,7 +27,7 @@ pr:
 variables:
   # Container Registry
   acrLoginServer: "wackopscoachdevacr.azurecr.io"
-  acrServiceConnection: "terraformiacdevops1"
+  azureServiceConnection: "terraformiacdevops1"
   
   # Image Configuration
   imageRepository: "wackops-coach"
@@ -52,18 +52,38 @@ stages:
           - checkout: self
             displayName: "Checkout Source Code"
 
-          # Build and push Docker image to ACR
-          - task: Docker@2
-            displayName: "Build and Push Image"
+          # Login to ACR using Azure CLI
+          - task: AzureCLI@2
+            displayName: "Login to ACR"
             inputs:
-              containerRegistry: $(acrServiceConnection)
-              repository: $(imageRepository)
-              command: "buildAndPush"
+              azureSubscription: $(azureServiceConnection)
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                echo "Logging into ACR: $(acrLoginServer)"
+                az acr login --name $(acrLoginServer)
+
+          # Build Docker image
+          - task: Docker@2
+            displayName: "Build Image"
+            inputs:
+              command: "build"
+              repository: "$(acrLoginServer)/$(imageRepository)"
               Dockerfile: $(dockerfilePath)
               tags: |
                 $(tag)
                 $(latestTag)
               arguments: "--target app"
+
+          # Push Docker image
+          - task: Docker@2
+            displayName: "Push Image"
+            inputs:
+              command: "push"
+              repository: "$(acrLoginServer)/$(imageRepository)"
+              tags: |
+                $(tag)
+                $(latestTag)
 
           # Publish build info for CD pipeline
           - task: Bash@3
