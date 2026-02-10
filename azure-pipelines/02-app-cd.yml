@@ -139,6 +139,7 @@ stages:
                       echo "Deploying image: $(acrLoginServer)/$(imageRepository):$(tag)"
                       sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/dev/deployment.yaml
                       sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/dev/worker-deployment.yaml
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServer)/$(imageRepository):$(tag)|g" k8s/dev/migration-job.yaml
                       cat k8s/dev/deployment.yaml | grep "image:"
 
                 # Deploy to DEV AKS
@@ -287,6 +288,7 @@ stages:
                       echo "Deploying image: $(acrLoginServerProd)/$(imageRepository):$(tag)"
                       sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServerProd)/$(imageRepository):$(tag)|g" k8s/prod/deployment.yaml
                       sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServerProd)/$(imageRepository):$(tag)|g" k8s/prod/worker-deployment.yaml
+                      sed -i "s|image:.*wackops-coach:.*|image: $(acrLoginServerProd)/$(imageRepository):$(tag)|g" k8s/prod/migration-job.yaml
                       cat k8s/prod/deployment.yaml | grep "image:"
 
                 # Deploy to PROD AKS
