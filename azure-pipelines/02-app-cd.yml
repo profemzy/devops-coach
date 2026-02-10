@@ -95,6 +95,16 @@ stages:
                         echo "##vso[task.setvariable variable=tag]${{ parameters.imageTag }}"
                       fi
 
+                - task: AzureCLI@2
+                  displayName: "Install kubectl and kubelogin"
+                  inputs:
+                    azureSubscription: $(aksServiceConnection)
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az aks install-cli
+                      echo "##vso[task.prependpath]/usr/local/bin"
+
                 - task: KubernetesManifest@1
                   displayName: "Create ExternalSecret (DEV)"
                   inputs:
@@ -232,6 +242,16 @@ stages:
                         echo "Using parameter tag: ${{ parameters.imageTag }}"
                         echo "##vso[task.setvariable variable=tag]${{ parameters.imageTag }}"
                       fi
+
+                - task: AzureCLI@2
+                  displayName: "Install kubectl and kubelogin"
+                  inputs:
+                    azureSubscription: $(aksServiceConnection)
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az aks install-cli
+                      echo "##vso[task.prependpath]/usr/local/bin"
 
                 - task: KubernetesManifest@1
                   displayName: "Create ExternalSecret (PROD)"
