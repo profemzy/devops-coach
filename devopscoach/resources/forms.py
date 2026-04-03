@@ -8,7 +8,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, Optional, URL
+from wtforms.validators import URL, DataRequired, Optional
 
 
 class CreateResourceForm(FlaskForm):
