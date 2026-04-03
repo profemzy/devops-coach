@@ -1,8 +1,14 @@
 """Forms for resources blueprint."""
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField, TextAreaField
-from wtforms.validators import URL, DataRequired, Optional
+from wtforms import (
+    IntegerField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, Optional, URL
 
 
 class CreateResourceForm(FlaskForm):
