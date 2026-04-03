@@ -17,9 +17,9 @@ def _is_safe_redirect_target(target: str | None) -> bool:
     ref_url = urlsplit(request.host_url)
     test_url = urlsplit(target)
 
-    return (
-        test_url.scheme in ("", "http", "https")
-        and test_url.netloc in ("", ref_url.netloc)
+    return test_url.scheme in ("", "http", "https") and test_url.netloc in (
+        "",
+        ref_url.netloc,
     )
 
 
