@@ -4,7 +4,6 @@ import uuid
 from datetime import timedelta
 
 from flask import url_for
-from flask_login import login_user
 
 from devopscoach.models import CustomRoadmap, SkillAssessment, User
 from devopscoach.utils.datetime import utc_now
@@ -30,9 +29,7 @@ class TestRoadmapList(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        # Use the test client's request context to login
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("roadmap.list_roadmaps"))
         assert response.status_code == 200
@@ -62,9 +59,7 @@ class TestRoadmapList(ViewTestMixin):
         session.add(roadmap)
         session.commit()
 
-        # Use the test client's request context to login
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("roadmap.list_roadmaps"))
         assert response.status_code == 200
@@ -90,8 +85,7 @@ class TestRoadmapCreate(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("roadmap.create"))
         assert response.status_code == 200
@@ -108,8 +102,7 @@ class TestRoadmapCreate(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         import re
 
@@ -174,8 +167,7 @@ class TestRoadmapCreate(ViewTestMixin):
         session.add_all([older, newer])
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("roadmap.create"))
 
@@ -223,8 +215,7 @@ class TestRoadmapDetail(ViewTestMixin):
         session.add(roadmap)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("roadmap.detail", roadmap_id=roadmap.id)
@@ -277,8 +268,7 @@ class TestRoadmapDetail(ViewTestMixin):
         session.add(roadmap)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("roadmap.detail", roadmap_id=roadmap.id)

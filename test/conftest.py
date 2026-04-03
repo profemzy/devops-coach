@@ -22,19 +22,21 @@ def app():
     params = {
         "DEBUG": False,
         "TESTING": True,
+        "LOGIN_DISABLED": False,
         "WTF_CSRF_ENABLED": False,
         "SQLALCHEMY_DATABASE_URI": db_uri,
     }
 
     _app = create_app(settings_override=params)
 
-    # Establish an application context before running the tests.
-    ctx = _app.app_context()
-    ctx.push()
-
     yield _app
 
-    ctx.pop()
+
+@pytest.fixture(scope="function", autouse=True)
+def app_ctx(app):
+    """Provide a fresh app context for each test."""
+    with app.app_context():
+        yield
 
 
 @pytest.fixture(scope="function")
@@ -45,7 +47,8 @@ def client(app):
     :param app: Pytest fixture
     :return: Flask app client
     """
-    yield app.test_client()
+    with app.test_client() as client:
+        yield client
 
 
 @pytest.fixture(scope="session")
@@ -56,8 +59,9 @@ def db(app):
     :param app: Pytest fixture
     :return: SQLAlchemy database session
     """
-    _db.drop_all()
-    _db.create_all()
+    with app.app_context():
+        _db.drop_all()
+        _db.create_all()
 
     return _db
 

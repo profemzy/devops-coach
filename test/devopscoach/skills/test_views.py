@@ -31,11 +31,7 @@ class TestSkillsAssessment(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        # Login by posting to the login endpoint
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.get(url_for("skills.assessment"))
         assert response.status_code == 200
@@ -53,11 +49,7 @@ class TestSkillsAssessment(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        # Login
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         # Submit the form
         data = {
@@ -106,10 +98,7 @@ class TestSkillsAssessment(ViewTestMixin):
         session.add(existing)
         session.commit()
 
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         data = {
             "current_role": "Software Developer",
@@ -157,10 +146,7 @@ class TestSkillsAssessment(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.post(
             url_for("skills.assessment"),
@@ -214,11 +200,7 @@ class TestSkillsResults(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        # Login
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         # Create an assessment with recommendations
         from devopscoach.models import SkillAssessment
@@ -286,11 +268,7 @@ class TestSkillsHistory(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        # Login
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.get(url_for("skills.history"))
         assert response.status_code == 200
@@ -322,14 +300,13 @@ class TestSkillsHistory(ViewTestMixin):
         session.add_all([older, newer])
         session.commit()
 
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.get(url_for("skills.history"))
 
         assert response.status_code == 200
-        assert response.data.index(b"Newer Role") < response.data.index(
-            b"Older Role"
+        assert response.data.index(
+            url_for("skills.results", assessment_id=newer.id).encode()
+        ) < response.data.index(
+            url_for("skills.results", assessment_id=older.id).encode()
         )

@@ -2,6 +2,7 @@
 
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from sqlalchemy import Text, cast
 
 from devopscoach.extensions import db
 from devopscoach.models import LearningResource
@@ -33,7 +34,9 @@ def list_resources():
     elif status == "in_progress":
         query = query.filter_by(is_completed=False)
     if tag:
-        query = query.filter(LearningResource.tags.contains([tag]))
+        query = query.filter(
+            cast(LearningResource.tags, Text).ilike(f'%"{tag}"%')
+        )
     if search:
         query = query.filter(
             LearningResource.title.ilike(f"%{search}%")

@@ -3,7 +3,6 @@
 import uuid
 
 from flask import url_for
-from flask_login import login_user
 
 from devopscoach.models import LearningResource, User
 from lib.test import ViewTestMixin
@@ -28,8 +27,7 @@ class TestResourceList(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("resources.list_resources"))
         assert response.status_code == 200
@@ -58,8 +56,7 @@ class TestResourceList(ViewTestMixin):
         session.add(resource)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("resources.list_resources"))
         assert response.status_code == 200
@@ -89,8 +86,7 @@ class TestResourceList(ViewTestMixin):
         session.add_all([resource1, resource2])
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("resources.list_resources", type="course")
@@ -125,8 +121,7 @@ class TestResourceList(ViewTestMixin):
         session.add_all([resource1, resource2])
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("resources.list_resources", status="completed")
@@ -161,8 +156,7 @@ class TestResourceList(ViewTestMixin):
         session.add_all([resource1, resource2])
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("resources.list_resources", tag="Docker")
@@ -191,8 +185,7 @@ class TestResourceCreate(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("resources.create"))
         assert response.status_code == 200
@@ -209,8 +202,7 @@ class TestResourceCreate(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         import re
 
@@ -258,8 +250,7 @@ class TestResourceCreate(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         import re
 
@@ -317,8 +308,7 @@ class TestResourceDetail(ViewTestMixin):
         session.add(resource)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(
             url_for("resources.detail", resource_id=resource.id)
@@ -357,8 +347,7 @@ class TestResourceToggle(ViewTestMixin):
         session.add(resource)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         # Get CSRF token
         response = self.client.get(url_for("resources.list_resources"))
@@ -410,8 +399,7 @@ class TestResourceDelete(ViewTestMixin):
 
         resource_id = resource.id
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         # Get CSRF token
         response = self.client.get(url_for("resources.list_resources"))
@@ -453,8 +441,7 @@ class TestResourceExplore(ViewTestMixin):
         session.add(user)
         session.commit()
 
-        with self.client.application.test_request_context():
-            login_user(user)
+        self.login(user)
 
         response = self.client.get(url_for("resources.explore"))
         assert response.status_code == 200

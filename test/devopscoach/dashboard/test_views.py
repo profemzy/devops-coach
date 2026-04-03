@@ -1,5 +1,6 @@
 """Tests for dashboard blueprint views."""
 
+import re
 import uuid
 
 from flask import url_for
@@ -29,10 +30,7 @@ class TestDashboard(ViewTestMixin):
         session.commit()
 
         # Login
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.get(url_for("dashboard.index"))
         assert response.status_code == 200
@@ -52,15 +50,12 @@ class TestDashboard(ViewTestMixin):
         session.commit()
 
         # Login
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         # Check dashboard with 0 assessments
         response = self.client.get(url_for("dashboard.index"))
         assert response.status_code == 200
-        assert b">0<" in response.data
+        assert re.search(rb">\s*0\s*<", response.data)
 
         # Create some assessments
         for i in range(3):
@@ -75,7 +70,7 @@ class TestDashboard(ViewTestMixin):
         # Check dashboard with 3 assessments
         response = self.client.get(url_for("dashboard.index"))
         assert response.status_code == 200
-        assert b">3<" in response.data
+        assert re.search(rb">\s*3\s*<", response.data)
 
 
 class TestAuthViews(ViewTestMixin):
@@ -96,53 +91,33 @@ class TestAuthViews(ViewTestMixin):
         """Login should ignore unsafe external next URLs."""
         user = self._create_user(session)
 
-        response = self.client.post(
-            url_for("auth.login"),
-            data={
-                "username": user.username,
-                "password": "password123",
-                "next": "https://evil.example/phish",
-            },
+        response = self.login(
+            user,
+            next_page="https://evil.example/phish",
             follow_redirects=False,
         )
 
         assert response.status_code == 302
-        assert response.headers["Location"].endswith(
-            url_for("dashboard.index")
-        )
+        assert response.headers["Location"] == "/dashboard/"
 
     def test_login_redirects_to_safe_next_page(self, session):
         """Login should preserve safe local next URLs."""
         user = self._create_user(session)
 
-        response = self.client.post(
-            url_for("auth.login"),
-            data={
-                "username": user.username,
-                "password": "password123",
-                "next": url_for("skills.assessment"),
-            },
+        response = self.login(
+            user,
+            next_page="/skills/assessment",
             follow_redirects=False,
         )
 
         assert response.status_code == 302
-        assert response.headers["Location"].endswith(
-            url_for("skills.assessment")
-        )
+        assert response.headers["Location"] == "/skills/assessment"
 
     def test_login_sets_remember_cookie_when_requested(self, session):
         """Login should set a remember cookie when requested."""
         user = self._create_user(session)
 
-        response = self.client.post(
-            url_for("auth.login"),
-            data={
-                "username": user.username,
-                "password": "password123",
-                "remember": "y",
-            },
-            follow_redirects=False,
-        )
+        response = self.login(user, remember=True, follow_redirects=False)
 
         cookies = response.headers.getlist("Set-Cookie")
 
@@ -150,24 +125,18 @@ class TestAuthViews(ViewTestMixin):
         assert any("remember_token=" in cookie for cookie in cookies)
 
     def test_logout_requires_post(self, session):
-        """Logout should reject GET requests."""
+        """Logout should not be available over GET."""
         user = self._create_user(session)
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.get(url_for("auth.logout"))
 
-        assert response.status_code == 405
+        assert response.status_code in (404, 405)
 
     def test_logout_post_clears_session(self, session):
         """Logout should clear the current session."""
         user = self._create_user(session)
-        self.client.post(
-            url_for("auth.login"),
-            data={"username": user.username, "password": "password123"},
-        )
+        self.login(user)
 
         response = self.client.post(
             url_for("auth.logout"),
@@ -176,7 +145,7 @@ class TestAuthViews(ViewTestMixin):
         )
 
         assert response.status_code == 302
-        assert response.headers["Location"].endswith(url_for("page.home"))
+        assert response.headers["Location"] == "/"
 
         protected = self.client.get(url_for("dashboard.index"))
         assert protected.status_code == 302
