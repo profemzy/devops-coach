@@ -33,23 +33,11 @@ def assessment():
             "weekly_learning_hours": form.weekly_learning_hours.data,
         }
 
-        # Create or update assessment
-        assessment = SkillAssessment.query.filter_by(
-            user_id=current_user.id
-        ).first()
-
-        if assessment:
-            # Update existing assessment
-            assessment.assessment_data = skills_data
-            # Reset results as they need to be regenerated
-            assessment.recommendations = None
-        else:
-            # Create new assessment
-            assessment = SkillAssessment(
-                user_id=current_user.id,
-                assessment_data=skills_data,
-            )
-            db.session.add(assessment)
+        assessment = SkillAssessment(
+            user_id=current_user.id,
+            assessment_data=skills_data,
+        )
+        db.session.add(assessment)
 
         db.session.commit()
 
@@ -59,9 +47,11 @@ def assessment():
         return redirect(url_for("skills.results", assessment_id=assessment.id))
 
     # Check for existing assessment
-    existing_assessment = SkillAssessment.query.filter_by(
-        user_id=current_user.id
-    ).first()
+    existing_assessment = (
+        SkillAssessment.query.filter_by(user_id=current_user.id)
+        .order_by(SkillAssessment.assessment_date.desc())
+        .first()
+    )
     if existing_assessment and request.method == "GET":
         # Pre-fill form with existing data
         for field, value in existing_assessment.assessment_data.items():

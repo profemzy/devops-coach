@@ -1,5 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import (
+    BooleanField,
+    HiddenField,
+    PasswordField,
+    StringField,
+    SubmitField,
+)
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 
@@ -11,6 +17,8 @@ class LoginForm(FlaskForm):
         validators=[DataRequired(), Length(min=3, max=120)],
     )
     password = PasswordField("Password", validators=[DataRequired()])
+    remember = BooleanField("Remember me")
+    next = HiddenField()
     submit = SubmitField("Sign In")
 
 
@@ -36,3 +44,9 @@ class RegistrationForm(FlaskForm):
         ],
     )
     submit = SubmitField("Register")
+
+
+class LogoutForm(FlaskForm):
+    """Form for secure logout submission."""
+
+    submit = SubmitField("Logout")

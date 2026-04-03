@@ -14,7 +14,6 @@ class TestResourceList(ViewTestMixin):
 
     def test_list_requires_login(self):
         """Resource list page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("resources.list_resources"))
         assert response.status_code == 302
 
@@ -136,13 +135,48 @@ class TestResourceList(ViewTestMixin):
         assert b"Completed Course" in response.data
         assert b"Pending Course" not in response.data
 
+    def test_list_filters_by_tag(self, session):
+        """List page should filter resources by tag."""
+        unique_id = str(uuid.uuid4())[:8]
+        user = User(
+            username=f"testuser_{unique_id}",
+            email=f"test_{unique_id}@example.com",
+        )
+        user.set_password("password123")
+        session.add(user)
+        session.commit()
+
+        resource1 = LearningResource(
+            user_id=user.id,
+            title="Docker Basics",
+            resource_type="course",
+            tags=["Docker", "Containers"],
+        )
+        resource2 = LearningResource(
+            user_id=user.id,
+            title="Terraform Basics",
+            resource_type="course",
+            tags=["Terraform", "IaC"],
+        )
+        session.add_all([resource1, resource2])
+        session.commit()
+
+        with self.client.application.test_request_context():
+            login_user(user)
+
+        response = self.client.get(
+            url_for("resources.list_resources", tag="Docker")
+        )
+        assert response.status_code == 200
+        assert b"Docker Basics" in response.data
+        assert b"Terraform Basics" not in response.data
+
 
 class TestResourceCreate(ViewTestMixin):
     """Tests for resource create view."""
 
     def test_create_requires_login(self):
         """Create page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("resources.create"))
         assert response.status_code == 302
 
@@ -213,13 +247,53 @@ class TestResourceCreate(ViewTestMixin):
         assert resource.resource_type == "course"
         assert resource.tags == ["Kubernetes", "K8s", "Containers"]
 
+    def test_create_invalid_submission_shows_inline_errors(self, session):
+        """Create page should show validation feedback for invalid input."""
+        unique_id = str(uuid.uuid4())[:8]
+        user = User(
+            username=f"testuser_{unique_id}",
+            email=f"test_{unique_id}@example.com",
+        )
+        user.set_password("password123")
+        session.add(user)
+        session.commit()
+
+        with self.client.application.test_request_context():
+            login_user(user)
+
+        import re
+
+        response = self.client.get(url_for("resources.create"))
+        match = re.search(
+            rb'name="csrf_token".*?value="([^\"]+)"', response.data
+        )
+        csrf_token = match.group(1).decode("utf-8") if match else ""
+
+        response = self.client.post(
+            url_for("resources.create"),
+            data={
+                "title": "Broken URL Resource",
+                "resource_type": "course",
+                "url": "not-a-url",
+                "csrf_token": csrf_token,
+                "submit": "Create Resource",
+            },
+            follow_redirects=False,
+        )
+
+        assert response.status_code == 200
+        assert (
+            b"Please fix the highlighted fields and try again."
+            in response.data
+        )
+        assert b"Invalid URL." in response.data
+
 
 class TestResourceDetail(ViewTestMixin):
     """Tests for resource detail view."""
 
     def test_detail_requires_login(self):
         """Detail page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("resources.detail", resource_id=1))
         assert response.status_code == 302
 
@@ -258,7 +332,6 @@ class TestResourceToggle(ViewTestMixin):
 
     def test_toggle_requires_login(self):
         """Toggle should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.post(
             url_for("resources.toggle_complete", resource_id=1)
         )
@@ -313,7 +386,6 @@ class TestResourceDelete(ViewTestMixin):
 
     def test_delete_requires_login(self):
         """Delete should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.post(url_for("resources.delete", resource_id=1))
         assert response.status_code == 302
 
@@ -367,7 +439,6 @@ class TestResourceExplore(ViewTestMixin):
 
     def test_explore_requires_login(self):
         """Explore page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("resources.explore"))
         assert response.status_code == 302
 

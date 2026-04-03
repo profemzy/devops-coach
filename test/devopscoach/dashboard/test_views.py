@@ -13,8 +13,6 @@ class TestDashboard(ViewTestMixin):
 
     def test_dashboard_requires_login(self):
         """Dashboard should redirect to login if not authenticated."""
-        # Ensure we're logged out first
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("dashboard.index"))
         assert response.status_code == 302
 
@@ -43,9 +41,6 @@ class TestDashboard(ViewTestMixin):
 
     def test_dashboard_shows_assessment_count(self, session):
         """Dashboard should show the correct assessment count."""
-        # Ensure clean state
-        self.client.get(url_for("auth.logout"))
-
         # Create a test user with unique data
         unique_id = str(uuid.uuid4())[:8]
         user = User(
@@ -81,3 +76,107 @@ class TestDashboard(ViewTestMixin):
         response = self.client.get(url_for("dashboard.index"))
         assert response.status_code == 200
         assert b">3<" in response.data
+
+
+class TestAuthViews(ViewTestMixin):
+    """Regression tests for auth flows."""
+
+    def _create_user(self, session):
+        unique_id = str(uuid.uuid4())[:8]
+        user = User(
+            username=f"testuser_{unique_id}",
+            email=f"test_{unique_id}@example.com",
+        )
+        user.set_password("password123")
+        session.add(user)
+        session.commit()
+        return user
+
+    def test_login_rejects_external_next_redirect(self, session):
+        """Login should ignore unsafe external next URLs."""
+        user = self._create_user(session)
+
+        response = self.client.post(
+            url_for("auth.login"),
+            data={
+                "username": user.username,
+                "password": "password123",
+                "next": "https://evil.example/phish",
+            },
+            follow_redirects=False,
+        )
+
+        assert response.status_code == 302
+        assert response.headers["Location"].endswith(
+            url_for("dashboard.index")
+        )
+
+    def test_login_redirects_to_safe_next_page(self, session):
+        """Login should preserve safe local next URLs."""
+        user = self._create_user(session)
+
+        response = self.client.post(
+            url_for("auth.login"),
+            data={
+                "username": user.username,
+                "password": "password123",
+                "next": url_for("skills.assessment"),
+            },
+            follow_redirects=False,
+        )
+
+        assert response.status_code == 302
+        assert response.headers["Location"].endswith(
+            url_for("skills.assessment")
+        )
+
+    def test_login_sets_remember_cookie_when_requested(self, session):
+        """Login should set a remember cookie when requested."""
+        user = self._create_user(session)
+
+        response = self.client.post(
+            url_for("auth.login"),
+            data={
+                "username": user.username,
+                "password": "password123",
+                "remember": "y",
+            },
+            follow_redirects=False,
+        )
+
+        cookies = response.headers.getlist("Set-Cookie")
+
+        assert response.status_code == 302
+        assert any("remember_token=" in cookie for cookie in cookies)
+
+    def test_logout_requires_post(self, session):
+        """Logout should reject GET requests."""
+        user = self._create_user(session)
+        self.client.post(
+            url_for("auth.login"),
+            data={"username": user.username, "password": "password123"},
+        )
+
+        response = self.client.get(url_for("auth.logout"))
+
+        assert response.status_code == 405
+
+    def test_logout_post_clears_session(self, session):
+        """Logout should clear the current session."""
+        user = self._create_user(session)
+        self.client.post(
+            url_for("auth.login"),
+            data={"username": user.username, "password": "password123"},
+        )
+
+        response = self.client.post(
+            url_for("auth.logout"),
+            data={},
+            follow_redirects=False,
+        )
+
+        assert response.status_code == 302
+        assert response.headers["Location"].endswith(url_for("page.home"))
+
+        protected = self.client.get(url_for("dashboard.index"))
+        assert protected.status_code == 302

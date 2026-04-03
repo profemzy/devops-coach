@@ -12,7 +12,12 @@ This document provides essential information for AI coding agents working on the
 ./run test test/devopscoach/skills/test_views.py::TestSkillsAssessment::test_assessment_page_renders  # Single test
 ./run test:coverage                                 # With coverage report
 ./run test -m "not slow"                            # With markers
+docker compose exec -T web pytest test/devopscoach/skills/test_ai_service.py -q  # Reliable targeted pytest in container
 ```
+
+Notes:
+- `./run test ...` is the preferred project command.
+- In this repo, direct `docker compose exec -T web pytest ...` can be more reliable for very targeted reruns when the wrapper broadens collection or the environment kills longer runs.
 
 ### Code Quality
 ```bash
@@ -42,13 +47,14 @@ This document provides essential information for AI coding agents working on the
 - **Linter/Formatter:** Ruff (replaces Black, flake8, isort)
 - **Line Length:** 79 characters
 - **Package Manager:** uv (not pip)
+- **OpenAI SDK:** `openai==2.30.0`
 
 ### Import Organization
 Follow this order (Ruff's `I` rule enforces this):
 
 ```python
 # 1. Standard library imports
-from datetime import datetime
+from datetime import timedelta
 
 # 2. Third-party imports
 from flask import Blueprint, flash, redirect, render_template, url_for
@@ -62,6 +68,7 @@ from devopscoach.auth import auth
 from devopscoach.extensions import db
 from devopscoach.models import User
 from devopscoach.services.ai_service import get_ai_service
+from devopscoach.utils.datetime import utc_now
 ```
 
 **Rules:**
@@ -114,6 +121,23 @@ user = User.query.filter_by(username=username).first()
 assessment = SkillAssessment.query.filter_by(user_id=current_user.id).first_or_404()
 ```
 
+### Datetime Handling
+```python
+from datetime import timedelta
+
+from devopscoach.utils.datetime import utc_now
+
+# Use utc_now() for persisted UTC timestamps
+resource.completion_date = utc_now()
+
+# Use utc_now() in tests instead of datetime.utcnow()
+older = utc_now() - timedelta(days=1)
+```
+
+Rules:
+- Do not introduce new `datetime.utcnow()` call sites.
+- Use `devopscoach.utils.datetime.utc_now()` for model defaults, view timestamps, and test data that needs UTC ordering.
+
 ## Flask Patterns
 
 ### Blueprint Structure
@@ -145,6 +169,12 @@ if form.validate_on_submit():
 return render_template("auth/login.html", form=form)
 ```
 
+Current app expectations:
+- Logout is POST-only.
+- Login must preserve only safe local `next` redirects.
+- The login form supports `remember me`.
+- Templates should render inline validation feedback for invalid fields.
+
 ## Testing Patterns
 
 ### Test File Structure
@@ -172,6 +202,10 @@ class TestSkillsAssessment(ViewTestMixin):
 - Create unique test data using `uuid.uuid4()`
 - Clean up is automatic via session rollback
 
+Additional notes:
+- Existing test files are preferred when adding related regression coverage.
+- If you need CSRF tokens for form posts, fetch the form page first and extract the hidden token from the response.
+
 ## Common Patterns
 
 ### Services (Singleton Pattern)
@@ -196,6 +230,12 @@ from config import settings
 api_key = settings.OPENAI_API_KEY
 ```
 
+### Product/Flow Notes
+- Skills assessments are historical records now; new submissions create new `SkillAssessment` rows instead of overwriting the first one.
+- “Latest assessment” behavior should explicitly order by newest-first, not rely on `.first()` without ordering.
+- Roadmap creation should use the newest assessment defaults.
+- Resource tag filters are expected to be functional when exposed in the UI.
+
 ## Security Reminders
 - Never commit sensitive files (see `.security-checklist.md`)
 - Use `bcrypt` for password hashing
@@ -209,6 +249,7 @@ api_key = settings.OPENAI_API_KEY
 - **Extensions:** Initialized in `devopscoach/extensions.py`
 - **Models:** All in single file `devopscoach/models.py`
 - **Migrations:** Use `./run flask db` commands, stored in `db/versions/`
+- **UTC Helper:** `devopscoach/utils/datetime.py`
 
 ## Getting Help
 - **Documentation:** See `README.md`, `k8s/README.md`, `.security-checklist.md`

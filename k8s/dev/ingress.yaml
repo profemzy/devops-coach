@@ -5,8 +5,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: wackops-coach-ingress
-  namespace: wackops-coach
+  name: devops-coach-ingress
+  namespace: devops-coach
   annotations:
     acme.cert-manager.io/http01-ingress-class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -23,7 +23,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: wackops-coach
+                name: devops-coach
                 port:
                   number: 80
   tls:

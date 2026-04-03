@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: wackops-coach-migration
-  namespace: wackops-coach
+  name: devops-coach-migration
+  namespace: devops-coach
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
@@ -11,49 +11,49 @@ spec:
     spec:
       containers:
         - name: migration
-          image: devacrva1ng1.azurecr.io/wackops-coach:latest
+          image: devacrva1ng1.azurecr.io/devops-coach:latest
           imagePullPolicy: Always
           command: ["flask", "db", "upgrade", "head"]
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: DATABASE_URL
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_DB
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_HOST
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_PORT
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: REDIS_URL
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: SECRET_KEY
       restartPolicy: OnFailure
   backoffLimit: 1

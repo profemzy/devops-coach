@@ -1,7 +1,5 @@
 """Views for resources blueprint."""
 
-from datetime import datetime
-
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
@@ -9,6 +7,7 @@ from devopscoach.extensions import db
 from devopscoach.models import LearningResource
 from devopscoach.resources import resources
 from devopscoach.resources.forms import CreateResourceForm, EditResourceForm
+from devopscoach.utils.datetime import utc_now
 
 
 @resources.route("/")
@@ -33,6 +32,8 @@ def list_resources():
         query = query.filter_by(is_completed=True)
     elif status == "in_progress":
         query = query.filter_by(is_completed=False)
+    if tag:
+        query = query.filter(LearningResource.tags.contains([tag]))
     if search:
         query = query.filter(
             LearningResource.title.ilike(f"%{search}%")
@@ -150,7 +151,7 @@ def edit(resource_id):
         is_completed = form.is_completed.data == "true"
         if is_completed and not resource.is_completed:
             resource.is_completed = True
-            resource.completion_date = datetime.utcnow()
+            resource.completion_date = utc_now()
         elif not is_completed:
             resource.is_completed = False
             resource.completion_date = None
@@ -183,7 +184,7 @@ def toggle_complete(resource_id):
 
     resource.is_completed = not resource.is_completed
     if resource.is_completed:
-        resource.completion_date = datetime.utcnow()
+        resource.completion_date = utc_now()
         flash("Resource marked as complete!", "success")
     else:
         resource.completion_date = None

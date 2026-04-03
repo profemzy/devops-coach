@@ -22,54 +22,84 @@
       <form method="POST" class="space-y-6">
         {{ form.hidden_tag() }}
 
+        {% if form.errors %}
+          <div class="alert alert-danger rounded-xl">
+            <p class="text-sm font-semibold">Please fix the highlighted fields and try again.</p>
+          </div>
+        {% endif %}
+
         <!-- Title -->
         <div>
           {{ form.title.label(class="field-label mb-2") }}
-          {{ form.title(class_="field-input") }}
+          {{ form.title(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.title.errors else "field-input")) }}
+          {% if form.title.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.title.errors[0] }}</p>
+          {% endif %}
         </div>
 
         <!-- Description -->
         <div>
           {{ form.description.label(class="field-label mb-2") }}
-          {{ form.description(class_="field-input", rows="3") }}
+          {{ form.description(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.description.errors else "field-input"), rows="3") }}
+          {% if form.description.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.description.errors[0] }}</p>
+          {% endif %}
         </div>
 
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             {{ form.resource_type.label(class="field-label mb-2") }}
-            {{ form.resource_type(class_="field-input") }}
+            {{ form.resource_type(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.resource_type.errors else "field-input")) }}
+            {% if form.resource_type.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.resource_type.errors[0] }}</p>
+            {% endif %}
           </div>
 
           <div>
             {{ form.difficulty.label(class="field-label mb-2") }}
-            {{ form.difficulty(class_="field-input") }}
+            {{ form.difficulty(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.difficulty.errors else "field-input")) }}
+            {% if form.difficulty.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.difficulty.errors[0] }}</p>
+            {% endif %}
           </div>
         </div>
 
         <!-- URL -->
         <div>
           {{ form.url.label(class="field-label mb-2") }}
-          {{ form.url(class_="field-input") }}
+          {{ form.url(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.url.errors else "field-input")) }}
+          {% if form.url.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.url.errors[0] }}</p>
+          {% endif %}
         </div>
 
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             {{ form.estimated_hours.label(class="field-label mb-2") }}
-            {{ form.estimated_hours(class_="field-input") }}
+            {{ form.estimated_hours(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.estimated_hours.errors else "field-input")) }}
+            {% if form.estimated_hours.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.estimated_hours.errors[0] }}</p>
+            {% endif %}
           </div>
 
           <div>
             {{ form.tags.label(class="field-label mb-2") }}
-            {{ form.tags(class_="field-input") }}
+            {{ form.tags(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.tags.errors else "field-input")) }}
+            {% if form.tags.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.tags.errors[0] }}</p>
+            {% endif %}
           </div>
         </div>
 
         <!-- Status -->
         <div>
           {{ form.is_completed.label(class="field-label mb-2") }}
-          {{ form.is_completed(class_="field-input") }}
+          {{ form.is_completed(class_=("field-input border-red-500 focus:border-red-500 focus:ring-red-500" if form.is_completed.errors else "field-input")) }}
+          {% if form.is_completed.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.is_completed.errors[0] }}</p>
+          {% endif %}
         </div>
 
         <!-- Submit Button -->

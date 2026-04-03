@@ -14,11 +14,12 @@ The Azure infrastructure (AKS, ACR, Key Vault) for this application is managed s
 ## Features
 
 - **Skills Assessment** - Analyze your current skills against DevOps requirements
-- **Custom Roadmaps** - Get personalized learning paths based on your background
-- **Learning Resources** - Discover curated tutorials, courses, and certifications
-- **Portfolio Projects** - Build hands-on projects to showcase your skills
-- **Interview Prep** - Practice DevOps-specific interview questions and scenarios
-- **Job Search** - Track and analyze DevOps job opportunities
+- **Assessment History** - Save multiple submissions and review progress over time
+- **Custom Roadmaps** - Create and manage personalized learning paths
+- **Learning Resources** - Save, filter, and explore curated tutorials, courses, and certifications
+- **Portfolio Projects** - Planned model support for hands-on portfolio work
+- **Interview Prep** - Planned model support for DevOps interview preparation
+- **Job Search** - Planned model support for job tracking and analysis
 
 ## Tech Stack
 
@@ -29,7 +30,7 @@ The Azure infrastructure (AKS, ACR, Key Vault) for this application is managed s
 - **Celery 5.5** - Background task processing
 - **SQLAlchemy 2.0** - ORM
 - **Flask-Login** - User authentication
-- **OpenAI API** - AI-powered features (compatible endpoints)
+- **OpenAI Python SDK 2.30.0** - AI-powered features via compatible endpoints
 - **Tavily API** - Web search for up-to-date DevOps trends
 
 ### Frontend
@@ -59,7 +60,8 @@ cd devopscoach
 cp .env.example .env
 
 # Build and start services
-docker compose up --build
+docker compose build
+docker compose up -d
 
 # In a second terminal, setup the database
 ./run flask db reset --with-testdb
@@ -115,11 +117,14 @@ MAIL_PASSWORD=your_app_password
 Use the `./run` script for common development tasks:
 
 ```bash
-./run test              # Run tests
-./run lint              # Lint Python code
-./run format            # Format Python code
-./run shell             # Shell in web container
-./run flask <command>   # Run Flask commands
+./run test                   # Run tests
+./run lint                   # Lint Python code
+./run format                 # Format Python code
+./run quality                # Run lint/format checks
+./run shell                  # Shell in web container
+./run flask <command>        # Run Flask commands
+./run yarn:build:js          # Build JavaScript assets
+./run yarn:build:css         # Build CSS assets
 ```
 
 ### Database Management
@@ -144,20 +149,22 @@ devopscoach/
 ├── app.py              # Application factory
 ├── extensions.py       # Flask extensions
 ├── models.py           # Database models
+├── utils/              # Shared utilities (for example UTC datetime helpers)
 ├── auth/               # Authentication blueprint
 ├── dashboard/          # Main dashboard
-├── skills/             # Skills assessment ✅
+├── skills/             # Skills assessment, history, async AI results
 │   ├── views.py        # Assessment & results pages
 │   ├── forms.py        # Assessment form
 │   └── templates/      # Assessment UI
 ├── services/           # Business logic services
 │   ├── ai_service.py   # AI analysis with web search
 │   └── web_search_service.py  # Tavily integration
-├── roadmap/            # Learning roadmaps (coming soon)
-├── resources/          # Learning resources (coming soon)
-├── projects/           # Portfolio projects (coming soon)
-├── interview/          # Interview prep (coming soon)
-├── job_search/         # Job search (coming soon)
+├── roadmap/            # Learning roadmaps
+├── resources/          # Learning resources
+├── tasks/              # Celery background jobs
+├── projects/           # Portfolio projects (model only for now)
+├── interview/          # Interview prep (model only for now)
+├── job_search/         # Job search (model only for now)
 └── templates/          # Jinja2 templates
 ```
 
@@ -175,25 +182,35 @@ devopscoach/
 - ✅ Web search integration (Tavily) for up-to-date DevOps trends
 - ✅ Personalized recommendations (roles, skills, roadmap, certifications, projects)
 - ✅ Assessment history tracking
-- ✅ 24 passing tests
+- ✅ Improved form validation UX across auth, skills, and resources
+- ✅ Auth hardening (`remember me`, safe `next`, POST logout)
+- ✅ Local Docker smoke test validated for homepage, health, auth, dashboard, and skills assessment
 
-**Planned:**
-- ⏳ Custom Roadmaps (Phase 3)
-- ⏳ Learning Resources (Phase 4)
-- ⏳ Portfolio Projects (Phase 5)
-- ⏳ Interview Prep (Phase 6)
-- ⏳ Job Search (Phase 7)
+**Available Now:**
+- ✅ Custom Roadmaps CRUD flow
+- ✅ Learning Resources CRUD flow with filtering and explore page
+
+**Planned / Partial:**
+- ⏳ Portfolio Projects UI and workflows
+- ⏳ Interview Prep UI and workflows
+- ⏳ Job Search UI and workflows
 
 ## Roadmap
 
 1. **Phase 1: Foundation** ✅ - Authentication, dashboard, core infrastructure
 2. **Phase 2: Skills Assessment** ✅ - AI-powered skill gap analysis with web search
-3. **Phase 3: Learning Roadmaps** - Personalized learning paths with progress tracking
-4. **Phase 4: Resources** - Curated tutorials, courses, and certifications
+3. **Phase 3: Learning Roadmaps** 🚧 - Personalized learning paths with progress tracking
+4. **Phase 4: Resources** 🚧 - Curated tutorials, courses, and certifications
 5. **Phase 5: Projects** - Hands-on portfolio projects with templates
 6. **Phase 6: Interview Prep** - Practice questions and mock scenarios
 7. **Phase 7: Job Search** - Job tracking and market analysis
 8. **Phase 8: Polish** - Performance, optimizations, and final touches
+
+## Notes
+
+- AI analysis gracefully falls back to deterministic recommendations when `OPENAI_API_KEY` is not configured or the AI request fails.
+- The app currently targets Python 3.14 and has been updated to use `openai==2.30.0` plus non-deprecated UTC datetime helpers.
+- Docker image builds may still log static digest warnings for missing `roadmap` and `resources` static input paths. These warnings do not currently block local startup.
 
 ## License
 

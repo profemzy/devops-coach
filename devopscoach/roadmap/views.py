@@ -40,9 +40,11 @@ def create():
             user_id=current_user.id,
         ).first()
     else:
-        assessment = SkillAssessment.query.filter_by(
-            user_id=current_user.id
-        ).first()
+        assessment = (
+            SkillAssessment.query.filter_by(user_id=current_user.id)
+            .order_by(SkillAssessment.assessment_date.desc())
+            .first()
+        )
 
     if request.method in ("GET", "POST"):
         _prefill_roadmap_form(form, assessment)

@@ -1,7 +1,7 @@
 """Forms for resources blueprint."""
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, TextAreaField
+from wtforms import IntegerField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import URL, DataRequired, Optional
 
 
@@ -64,7 +64,7 @@ class CreateResourceForm(FlaskForm):
         description="Comma-separated tags (e.g., Docker, Kubernetes, AWS)",
     )
 
-    submit = StringField("Create Resource")
+    submit = SubmitField("Create Resource")
 
 
 class EditResourceForm(FlaskForm):
@@ -135,4 +135,4 @@ class EditResourceForm(FlaskForm):
         validators=[DataRequired()],
     )
 
-    submit = StringField("Update Resource")
+    submit = SubmitField("Update Resource")

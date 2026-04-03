@@ -1,11 +1,13 @@
 """Tests for roadmap blueprint views."""
 
 import uuid
+from datetime import timedelta
 
 from flask import url_for
 from flask_login import login_user
 
-from devopscoach.models import CustomRoadmap, User
+from devopscoach.models import CustomRoadmap, SkillAssessment, User
+from devopscoach.utils.datetime import utc_now
 from lib.test import ViewTestMixin
 
 
@@ -14,7 +16,6 @@ class TestRoadmapList(ViewTestMixin):
 
     def test_list_requires_login(self):
         """Roadmap list page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("roadmap.list_roadmaps"))
         assert response.status_code == 302
 
@@ -75,7 +76,6 @@ class TestRoadmapCreate(ViewTestMixin):
 
     def test_create_requires_login(self):
         """Create page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("roadmap.create"))
         assert response.status_code == 302
 
@@ -142,13 +142,53 @@ class TestRoadmapCreate(ViewTestMixin):
         assert roadmap is not None
         assert roadmap.roadmap_data["target_role"] == "DevOps Engineer"
 
+    def test_create_prefills_from_latest_assessment(self, session):
+        """Create page should use the newest assessment for defaults."""
+        unique_id = str(uuid.uuid4())[:8]
+        user = User(
+            username=f"testuser_{unique_id}",
+            email=f"test_{unique_id}@example.com",
+        )
+        user.set_password("password123")
+        session.add(user)
+        session.commit()
+
+        older = SkillAssessment(
+            user_id=user.id,
+            assessment_date=utc_now() - timedelta(days=2),
+            assessment_data={"current_role": "Developer"},
+            recommendations={
+                "recommended_roles": ["Platform Engineer"],
+                "skill_gaps": [{"skill": "Linux"}],
+            },
+        )
+        newer = SkillAssessment(
+            user_id=user.id,
+            assessment_date=utc_now(),
+            assessment_data={"current_role": "Developer"},
+            recommendations={
+                "recommended_roles": ["Site Reliability Engineer (SRE)"],
+                "skill_gaps": [{"skill": "Kubernetes"}],
+            },
+        )
+        session.add_all([older, newer])
+        session.commit()
+
+        with self.client.application.test_request_context():
+            login_user(user)
+
+        response = self.client.get(url_for("roadmap.create"))
+
+        assert response.status_code == 200
+        assert b"My Path to Site Reliability Engineer (SRE)" in response.data
+        assert b"Kubernetes" in response.data
+
 
 class TestRoadmapDetail(ViewTestMixin):
     """Tests for roadmap detail view."""
 
     def test_detail_requires_login(self):
         """Detail page should redirect to login if not authenticated."""
-        self.client.get(url_for("auth.logout"))
         response = self.client.get(url_for("roadmap.detail", roadmap_id=1))
         assert response.status_code == 302
 

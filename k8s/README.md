@@ -46,28 +46,30 @@ Apply the manifests in the following order:
 
 ```bash
 # Create namespace
-kubectl apply -f namespace.yaml
+kubectl apply -f prod/namespace.yaml
 
-# Create secrets
-kubectl apply -f secret.yaml
+# Sync secrets
+kubectl apply -f external-secrets/prod/cluster-secret-store.yaml
+kubectl apply -f external-secrets/prod/external-secret.yaml
 
 # Deploy Redis
-kubectl apply -f redis.yaml
+kubectl apply -f prod/redis.yaml
 
 # Run database migrations (one-time job)
-kubectl apply -f migration-job.yaml
+kubectl apply -f prod/migration-job.yaml
 
 # Wait for migration to complete
 kubectl wait --for=condition=complete --timeout=300s job/devops-coach-migration -n devops-coach
 
 # Deploy application
-kubectl apply -f deployment.yaml
+kubectl apply -f prod/deployment.yaml
+kubectl apply -f prod/worker-deployment.yaml
 
 # Create service
-kubectl apply -f service.yaml
+kubectl apply -f prod/service.yaml
 
 # Create ingress (optional, for external access)
-kubectl apply -f ingress.yaml
+kubectl apply -f prod/ingress.yaml
 ```
 
 ### 3. Verify Deployment
@@ -93,22 +95,22 @@ kubectl logs job/devops-coach-migration -n devops-coach
 
 # Restart deployment to pull new image
 kubectl rollout restart deployment/devops-coach -n devops-coach
+kubectl rollout restart deployment/devops-coach-worker -n devops-coach
 
 # Watch rollout status
 kubectl rollout status deployment/devops-coach -n devops-coach
+kubectl rollout status deployment/devops-coach-worker -n devops-coach
 ```
 
 ### Update Secrets
 
 ```bash
-# Edit secrets
-kubectl edit secret devops-coach-secrets -n devops-coach
-
-# Or re-apply the secret file
-kubectl apply -f secret.yaml
+# Re-sync external secrets
+kubectl apply -f external-secrets/prod/external-secret.yaml
 
 # Restart deployment to pick up new secrets
 kubectl rollout restart deployment/devops-coach -n devops-coach
+kubectl rollout restart deployment/devops-coach-worker -n devops-coach
 ```
 
 ## Troubleshooting

@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from flask_login import UserMixin
 from sqlalchemy import JSON, Boolean, DateTime, Integer, String
 
 from devopscoach.extensions import bcrypt, db
+from devopscoach.utils.datetime import utc_now
 
 
 class User(UserMixin, db.Model):
@@ -17,10 +16,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(String(255), nullable=False)
     first_name = db.Column(String(80))
     last_name = db.Column(String(80))
-    created_at = db.Column(DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    created_at = db.Column(DateTime, default=utc_now)
+    updated_at = db.Column(DateTime, default=utc_now, onupdate=utc_now)
     is_active = db.Column(Boolean, default=True)
 
     # Relationships
@@ -89,9 +86,7 @@ class SkillAssessment(db.Model):
     )  # For backward compatibility
 
     # Dates
-    assessment_date = db.Column(
-        DateTime, default=datetime.utcnow, nullable=False
-    )
+    assessment_date = db.Column(DateTime, default=utc_now, nullable=False)
     notes = db.Column(String(500))
 
     # JSON fields for storing structured data
@@ -111,10 +106,8 @@ class CustomRoadmap(db.Model):
     user_id = db.Column(Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(String(200), nullable=False)
     description = db.Column(String(1000))
-    created_at = db.Column(DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    created_at = db.Column(DateTime, default=utc_now)
+    updated_at = db.Column(DateTime, default=utc_now, onupdate=utc_now)
 
     # JSON field for storing roadmap structure
     roadmap_data = db.Column(JSON)
@@ -140,7 +133,7 @@ class LearningResource(db.Model):
     estimated_hours = db.Column(Integer)
     is_completed = db.Column(Boolean, default=False)
     completion_date = db.Column(DateTime)
-    created_at = db.Column(DateTime, default=datetime.utcnow)
+    created_at = db.Column(DateTime, default=utc_now)
 
     # Tags/categories stored as JSON
     tags = db.Column(JSON)
@@ -164,7 +157,7 @@ class PortfolioProject(db.Model):
     start_date = db.Column(DateTime)
     end_date = db.Column(DateTime)
     status = db.Column(String(20), default="In Progress")
-    created_at = db.Column(DateTime, default=datetime.utcnow)
+    created_at = db.Column(DateTime, default=utc_now)
 
     # Project data stored as JSON
     images = db.Column(JSON)
@@ -186,7 +179,7 @@ class InterviewPrep(db.Model):
     interview_date = db.Column(DateTime)
     interview_type = db.Column(String(50))  # Phone, Technical, Behavioral
     status = db.Column(String(20), default="Scheduled")
-    created_at = db.Column(DateTime, default=datetime.utcnow)
+    created_at = db.Column(DateTime, default=utc_now)
 
     # JSON fields for storing structured data
     questions_practiced = db.Column(JSON)
@@ -212,10 +205,8 @@ class JobSearch(db.Model):
     application_date = db.Column(DateTime)
     status = db.Column(String(50), default="Applied")
     notes = db.Column(String(2000))
-    created_at = db.Column(DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    created_at = db.Column(DateTime, default=utc_now)
+    updated_at = db.Column(DateTime, default=utc_now, onupdate=utc_now)
 
     # Application tracking
     contact_person = db.Column(String(200))

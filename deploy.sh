@@ -9,6 +9,7 @@ IMAGE_NAME="devops-coach"
 TAG="latest"
 FULL_IMAGE_NAME="${REGISTRY}/${IMAGE_NAME}:${TAG}"
 NAMESPACE="devops-coach"
+K8S_DIR="k8s/prod"
 
 echo "=========================================="
 echo "DevOps Coach Kubernetes Deployment"
@@ -44,16 +45,14 @@ deploy_to_k8s() {
   echo "📋 Applying Kubernetes manifests..."
 
   # Create namespace if it doesn't exist
-  kubectl apply -f k8s/namespace.yaml
+  kubectl apply -f "${K8S_DIR}/namespace.yaml"
 
   # Check if secrets exist
   if ! kubectl get secret devops-coach-secrets -n ${NAMESPACE} >/dev/null 2>&1; then
     echo ""
     echo "⚠️  Warning: Secrets not found!"
     echo "   Please create secrets first:"
-    echo "   cp k8s/secret.yaml.example k8s/secret.yaml"
-    echo "   # Edit k8s/secret.yaml with your values"
-    echo "   kubectl apply -f k8s/secret.yaml"
+    echo "   Apply the ExternalSecret resources or create devops-coach-secrets manually"
     echo ""
     read -p "Continue anyway? (y/N) " -n 1 -r
     echo
@@ -63,12 +62,11 @@ deploy_to_k8s() {
   fi
 
   # Apply manifests
-  kubectl apply -f k8s/secret.yaml 2>/dev/null || echo "   Secrets already exist"
-  kubectl apply -f k8s/redis.yaml
-  kubectl apply -f k8s/deployment.yaml
-  kubectl apply -f k8s/worker-deployment.yaml
-  kubectl apply -f k8s/service.yaml
-  kubectl apply -f k8s/ingress.yaml
+  kubectl apply -f "${K8S_DIR}/redis.yaml"
+  kubectl apply -f "${K8S_DIR}/deployment.yaml"
+  kubectl apply -f "${K8S_DIR}/worker-deployment.yaml"
+  kubectl apply -f "${K8S_DIR}/service.yaml"
+  kubectl apply -f "${K8S_DIR}/ingress.yaml"
 
   echo ""
   echo "⏳ Waiting for rollout to complete..."
@@ -85,7 +83,7 @@ run_migrations() {
   echo "🗄️  Running database migrations..."
 
   # Apply migration job
-  kubectl apply -f k8s/migration-job.yaml
+  kubectl apply -f "${K8S_DIR}/migration-job.yaml"
 
   # Wait for migration to complete
   echo "   Waiting for migration job to complete..."

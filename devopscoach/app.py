@@ -75,8 +75,11 @@ def create_app(settings_override=None):
     # Template context processors
     @app.context_processor
     def utility_context():
+        from devopscoach.auth.forms import LogoutForm
+
         return {
             "current_year": datetime.now().year,
+            "logout_form": LogoutForm(),
         }
 
     return app

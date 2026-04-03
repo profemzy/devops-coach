@@ -1,86 +1,86 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wackops-coach
-  namespace: wackops-coach
+  name: devops-coach
+  namespace: devops-coach
   labels:
-    app: wackops-coach
+    app: devops-coach
     environment: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wackops-coach
+      app: devops-coach
   template:
     metadata:
       labels:
-        app: wackops-coach
+        app: devops-coach
         environment: dev
     spec:
       containers:
-        - name: wackops-coach
-          image: devacrva1ng1.azurecr.io/wackops-coach:latest
+        - name: devops-coach
+          image: devacrva1ng1.azurecr.io/devops-coach:latest
           imagePullPolicy: Always
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: DATABASE_URL
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_DB
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_HOST
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: POSTGRES_PORT
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: REDIS_URL
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: SECRET_KEY
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: OPENAI_API_KEY
             - name: OPENAI_API_BASE
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: OPENAI_API_BASE
             - name: OPENAI_MODEL
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: OPENAI_MODEL
             - name: TAVILY_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wackops-coach-secret
+                  name: devops-coach-secrets
                   key: TAVILY_API_KEY
             - name: GUNICORN_CMD_ARGS
               value: "--workers 2 --bind 0.0.0.0:8000 --timeout 60"
